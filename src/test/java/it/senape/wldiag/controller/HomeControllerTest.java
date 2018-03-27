@@ -1,5 +1,6 @@
 package it.senape.wldiag.controller;
 
+import it.senape.wldiag.config.UrlMappings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class HomeControllerTest {
     @Test
     public void shouldReturnHomePage() throws Exception {
         this.mockMvc.perform(
-          get("/api"))
+          get(UrlMappings.CTX_ROOT))
                 .andDo(print())
                 .andExpect(status().isOk())
         ;

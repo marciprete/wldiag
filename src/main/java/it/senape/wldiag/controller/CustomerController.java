@@ -1,5 +1,6 @@
 package it.senape.wldiag.controller;
 
+import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.dto.CustomerDto;
 import it.senape.wldiag.service.internal.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Controller
 @CrossOrigin("http://localhost:4200")
-@RequestMapping(value = "api/customers")
+@RequestMapping(value = UrlMappings.API_CUSTOMERS)
 public class CustomerController {
 
     private CustomerService customerService;
