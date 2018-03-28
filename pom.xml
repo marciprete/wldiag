@@ -1,84 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>it.edea</groupId>
-	<artifactId>wldiag</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>it.edea</groupId>
+    <artifactId>wldiag</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>WLDiag</name>
-	<description>WebLogic Analyzer Tool</description>
+    <name>WLDiag</name>
+    <description>WebLogic Diagnostic Image Analyzer Tool</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
-		<relativePath/>
-	</parent>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<jackson>2.5.5</jackson>
-		<skip.unit.tests>true</skip.unit.tests>
-		<skip.integration.tests>true</skip.integration.tests>
-		<dbunit.version>2.5.1</dbunit.version>
-		<spring.test.dbunit.version>1.2.1</spring.test.dbunit.version>
-	</properties>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <relativePath/>
+    </parent>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-		</profile>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <jackson>2.5.5</jackson>
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
+        <build.profile.id>dev</build.profile.id>
 
-		<profile>
-			<id>integration-test</id>
-			<properties>
-				<skip.integration.tests>false</skip.integration.tests>
-				<skip.unit.tests>true</skip.unit.tests>
-			</properties>
-		</profile>
+        <dbunit.version>2.5.1</dbunit.version>
+        <spring.test.dbunit.version>1.2.1</spring.test.dbunit.version>
 
-		<profile>
-			<id>prod</id>
-			<properties>
-				<obfuscation.skip>false</obfuscation.skip>
-				<skip.integration.tests>false</skip.integration.tests>
-				<skip.unit.tests>true</skip.unit.tests>
-			</properties>
-		</profile>
-	</profiles>
+        <jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
+        <jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-hateoas</artifactId>
-		</dependency>
+    <profiles>
+        <profile>
+            <id>dev</id>
+        </profile>
+
+        <profile>
+            <id>all-tests</id>
+            <properties>
+                <build.profile.id>all-tests</build.profile.id>
+                <!-- All tests are run. -->
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.unit.tests>false</skip.unit.tests>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>integration-test</id>
+            <properties>
+                <!-- Used to locate the profile specific configuration file. -->
+                <build.profile.id>integration-test</build.profile.id>
+                <!-- Only integration tests are run. -->
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.unit.tests>true</skip.unit.tests>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-security</artifactId>-->
-		<!--</dependency>-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-security</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -86,11 +102,11 @@
             <version>5.1.0.Final</version>
         </dependency>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>21.0</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -98,10 +114,10 @@
             <version>2.5</version>
         </dependency>
 
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
 
         <!-- this dependency, together with the application property, is used to
         format the java local date time as described here:
@@ -112,213 +128,293 @@
             <version>${jackson.version}</version>
         </dependency>
 
-		<!-- Add Hikari Connection Pooling support -->
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-		</dependency>
+        <!-- Add Hikari Connection Pooling support -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
 
-		<!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-jaxb-annotations &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>com.fasterxml.jackson.module</groupId>-->
-			<!--<artifactId>jackson-module-jaxb-annotations</artifactId>-->
-			<!--<version>${jackson}</version>-->
-		<!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-jaxb-annotations &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.module</groupId>-->
+        <!--<artifactId>jackson-module-jaxb-annotations</artifactId>-->
+        <!--<version>${jackson}</version>-->
+        <!--</dependency>-->
 
-		<!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-			<!--<artifactId>jackson-dataformat-yaml</artifactId>-->
-			<!--<version>${jackson}</version>-->
-		<!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
+        <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
+        <!--<version>${jackson}</version>-->
+        <!--</dependency>-->
 
-		<!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>com.fasterxml.jackson.core</groupId>-->
-			<!--<artifactId>jackson-core</artifactId>-->
-			<!--<version>${jackson}</version>-->
-		<!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-core</artifactId>-->
+        <!--<version>${jackson}</version>-->
+        <!--</dependency>-->
 
-		<!--<dependency>-->
-			<!--<groupId>com.fasterxml.jackson.core</groupId>-->
-			<!--<artifactId>jackson-annotations</artifactId>-->
-			<!--<version>${jackson}</version>-->
-		<!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-annotations</artifactId>-->
+        <!--<version>${jackson}</version>-->
+        <!--</dependency>-->
 
-		<!--<dependency>-->
-			<!--<groupId>com.fasterxml.jackson.core</groupId>-->
-			<!--<artifactId>jackson-databind</artifactId>-->
-			<!--<version>${jackson}</version>-->
-		<!--</dependency>-->
-
-
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>${dbunit.version}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.springtestdbunit</groupId>
-			<artifactId>spring-test-dbunit</artifactId>
-			<version>${spring.test.dbunit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>net.ttddyy</groupId>
-			<artifactId>datasource-proxy</artifactId>
-			<version>1.4.7</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.nitorcreations</groupId>
-			<artifactId>junit-runners</artifactId>
-			<version>1.3</version>
-			<scope>test</scope>
-		</dependency>
-
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
-						<goals><goal>copy-resources</goal></goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/classes/static/</outputDirectory >
-							<resources>
-								<resource>
-									<directory>${basedir}/angular-frontend/dist</directory >
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-integration-test-sources</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/integration-test/java</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-integration-test-resources</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>add-test-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>src/integration-test/resources</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18</version>
-				<configuration>
-					<!-- Skips unit tests if the value of skip.unit.tests property is true -->
-					<skipTests>${skip.unit.tests}</skipTests>
-					<excludes>
-						<exclude>**/IT*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-
-			<!-- Used for integration tests -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.21.0</version>
-				<executions>
-					<!-- States that both integration-test and verify goals of the Failsafe Maven plugin are executed. -->
-					<execution>
-						<id>integration-tests</id>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<!-- Skips integration tests if the value of skip.integration.tests property is true -->
-							<skipTests>${skip.integration.tests}</skipTests>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-databind</artifactId>-->
+        <!--<version>${jackson}</version>-->
+        <!--</dependency>-->
 
 
-	</build>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.21.0</version>
-			</plugin>
-		</plugins>
-	</reporting>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>${dbunit.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>${spring.test.dbunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.ttddyy</groupId>
+            <artifactId>datasource-proxy</artifactId>
+            <version>1.4.7</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nitorcreations</groupId>
+            <artifactId>junit-runners</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/static/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/angular-frontend/dist</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.1</version>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <destFile>${jacoco.ut.execution.data.file}</destFile>
+                            <!--
+                                Sets the name of the property containing the settings
+                                for JaCoCo runtime agent.
+                            -->
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>${jacoco.ut.execution.data.file}</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Integration tests -->
+                    <!--
+                    Prepares the property pointing to the JaCoCo runtime agent which
+                    is passed as VM argument when Maven the Failsafe plugin is executed.
+                    -->
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <destFile>${jacoco.it.execution.data.file}</destFile>
+                            <!--
+                                Sets the name of the property containing the settings
+                                for JaCoCo runtime agent.
+                            -->
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <!--
+                        Ensures that the code coverage report for integration tests after
+                        integration tests have been run.
+                    -->
+                    <execution>
+                        <id>post-integration-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>${jacoco.it.execution.data.file}</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-integration-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/integration-test/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18</version>
+                <configuration>
+                    <!-- Sets the VM argument line used when unit tests are run. -->
+                    <argLine>${surefireArgLine}</argLine>
+                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+                    <skipTests>${skip.unit.tests}</skipTests>
+                    <excludes>
+                        <exclude>**/IT*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Used for integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.21.0</version>
+                <executions>
+                    <!-- States that both integration-test and verify goals of the Failsafe Maven plugin are executed. -->
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the VM argument line used when integration tests are run. -->
+                            <!--<argLine>${failsafeArgLine}</argLine>-->
+
+                            <!-- Skips integration tests if the value of skip.integration.tests property is true -->
+                            <skipTests>${skip.integration.tests}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.21.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

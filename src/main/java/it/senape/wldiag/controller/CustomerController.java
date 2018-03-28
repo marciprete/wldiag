@@ -28,9 +28,12 @@ public class CustomerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "list", method = RequestMethod.GET)
+    @RequestMapping(value = UrlMappings.LIST, method = RequestMethod.GET)
     public List<CustomerDto> list() {
         return customerService.findAll();
     }
+
+
+
 
 }

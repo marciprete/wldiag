@@ -9,4 +9,9 @@ public final class UrlMappings {
     public static final String API_CUSTOMERS = "/api/customers";
 
     public static final String LIST = "list";
+    public static final String SHOW = "show";
+    public static final String ADD = "add";
+
+
+    private UrlMappings() {}
 }
