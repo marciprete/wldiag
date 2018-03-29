@@ -1,8 +1,8 @@
 package it.senape.wldiag.controller;
 
 import com.nitorcreations.junit.runners.NestedRunner;
-import it.senape.wldiag.config.WebTestConfig;
 import it.senape.wldiag.config.UrlMappings;
+import it.senape.wldiag.config.WebTestConfig;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.exceptions.StorageException;
 import it.senape.wldiag.fixtures.DiagnosticImageDtoFixtures;
@@ -26,7 +26,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,6 +88,18 @@ public class DiagnosticImageControllerTest {
                         .andExpect(status().isOk())
                 ;
             }
+
+            public class WhenFileNameIsNull {
+                @Test
+                public void showNotFoundPage() throws Exception {
+                    diagnosticImageDto.setFileName(null);
+                    when(diagnosticImageService.findById(isA(Long.class)))
+                            .thenReturn(diagnosticImageDto);
+                    mockMvc.perform(get(UrlMappings.API_DIAGNOSTIC_IMAGE + "/" + UrlMappings.SHOW + "/1"))
+                            .andDo(print())
+                            .andExpect(status().isNotFound());
+                }
+            }
         }
 
         public class WhenNoImagesAreFound {
@@ -98,9 +109,10 @@ public class DiagnosticImageControllerTest {
                 given(diagnosticImageService.findById(isA(Long.class)))
                         .willReturn(null);
                 mockMvc.perform(get(UrlMappings.API_DIAGNOSTIC_IMAGE + "/" + UrlMappings.SHOW + "/1"))
-                    .andDo(print())
-                    .andExpect(status().isNotFound());
+                        .andDo(print())
+                        .andExpect(status().isNotFound());
             }
+
         }
     }
 

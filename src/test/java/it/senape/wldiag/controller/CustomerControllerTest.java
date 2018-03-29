@@ -1,6 +1,6 @@
 package it.senape.wldiag.controller;
 
-import it.senape.wldiag.fixtures.CustomerDTOFixtures;
+import it.senape.wldiag.fixtures.CustomerDtoFixtures;
 import it.senape.wldiag.service.internal.CustomerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class CustomerControllerTest {
     @Test
     public void thatListShouldReturnValuesFromService() throws Exception {
         when(customerService.findAll())
-                .thenReturn(Arrays.asList(CustomerDTOFixtures.createCustomer()));
+                .thenReturn(Arrays.asList(CustomerDtoFixtures.createCustomer()));
 
         this.mockMvc.perform(
                 get("/api/customers/list"))

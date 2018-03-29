@@ -2,7 +2,7 @@ package it.senape.wldiag.fixtures;
 
 import it.senape.wldiag.dto.CustomerDto;
 
-public class CustomerDTOFixtures {
+public class CustomerDtoFixtures {
 
     public static CustomerDto createCustomer() {
         CustomerDto c = new CustomerDto();
