@@ -1,11 +1,10 @@
 package it.senape.wldiag.jpa.model.internal;
 
 import it.senape.wldiag.jpa.model.AbstractEntity;
+import it.senape.wldiag.jpa.model.jdbc.JdbcResourcePool;
+import it.senape.wldiag.jpa.model.jta.Jta;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -14,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 public class DiagnosticImage extends AbstractEntity<Long> {
 
+    @Column(nullable = false)
     private String fileName;
 
     private LocalDateTime acquisitionTime;
@@ -24,9 +24,17 @@ public class DiagnosticImage extends AbstractEntity<Long> {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "server_id")
-//    private Server server;
+    @OneToOne(fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        mappedBy = "diagnosticImage")
+    private Jta jta;
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "diagnosticImage")
+    private JdbcResourcePool jdbcResourcePool;
 
     public LocalDateTime getAcquisitionTime() {
         return acquisitionTime;
@@ -59,11 +67,20 @@ public class DiagnosticImage extends AbstractEntity<Long> {
     public void setServerName(String serverName) {
         this.serverName = serverName;
     }
-    //    public Server getServer() {
-//        return server;
-//    }
-//
-//    public void setServer(Server server) {
-//        this.server = server;
-//    }
+
+    public Jta getJta() {
+        return jta;
+    }
+
+    public void setJta(Jta jta) {
+        this.jta = jta;
+    }
+
+    public JdbcResourcePool getJdbcResourcePool() {
+        return jdbcResourcePool;
+    }
+
+    public void setJdbcResourcePool(JdbcResourcePool jdbcResourcePool) {
+        this.jdbcResourcePool = jdbcResourcePool;
+    }
 }

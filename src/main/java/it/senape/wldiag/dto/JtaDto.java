@@ -13,7 +13,6 @@ import java.util.Set;
  */
 @XmlRootElement(name = "JTA")
 public class JtaDto implements Serializable {
-
     private int defaultTimeout;//="3600"
     private int abandonTimeout;//="7200"
     private int completionTimeout;//="0"
@@ -37,6 +36,16 @@ public class JtaDto implements Serializable {
     private Set<ServerDto> servers;
 
     private Set<XAResourceDto> resources;
+
+    private Long diagnosticImageId;
+
+    public Long getDiagnosticImageId() {
+        return diagnosticImageId;
+    }
+
+    public void setDiagnosticImageId(Long diagnosticImageId) {
+        this.diagnosticImageId = diagnosticImageId;
+    }
 
     public int getDefaultTimeout() {
         return defaultTimeout;

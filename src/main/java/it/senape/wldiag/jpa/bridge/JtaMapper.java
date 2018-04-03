@@ -23,7 +23,7 @@ public class JtaMapper {
      * @param entity
      * @return
      */
-    static JtaDto mapEntityIntoDTO(Jta entity) {
+    public static JtaDto mapEntityIntoDTO(Jta entity) {
         JtaDto dto = new JtaDto();
 
         dto.setAbandonTimeout(entity.getAbandonTimeout());
@@ -46,7 +46,7 @@ public class JtaMapper {
      * @param entities
      * @return
      */
-    static List<JtaDto> mapEntitiesIntoDTOs(Iterable<Jta> entities) {
+    public static List<JtaDto> mapEntitiesIntoDTOs(Iterable<Jta> entities) {
         List<JtaDto> dtos = new ArrayList<>();
 
         entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));

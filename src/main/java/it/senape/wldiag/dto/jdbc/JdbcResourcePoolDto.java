@@ -1,7 +1,5 @@
 package it.senape.wldiag.dto.jdbc;
 
-import it.senape.wldiag.jpa.model.jdbc.AvailableResource;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +14,8 @@ public class JdbcResourcePoolDto implements Serializable {
     private Collection<JdbcResourceDto> availableResources = new ArrayList<>();
     private Collection<JdbcResourceDto> reservedResources = new ArrayList<>();
     private Collection<JdbcResourceDto> deadResources = new ArrayList<>();
+
+    private Long diagnosticImageId;
 
     public Integer getCurrentCapacity() {
         return currentCapacity;
@@ -55,5 +55,13 @@ public class JdbcResourcePoolDto implements Serializable {
 
     public void setDeadResources(Collection<JdbcResourceDto> deadResources) {
         this.deadResources = deadResources;
+    }
+
+    public void setDiagnosticImageId(Long diagnosticImageId) {
+        this.diagnosticImageId = diagnosticImageId;
+    }
+
+    public Long getDiagnosticImageId() {
+        return diagnosticImageId;
     }
 }
