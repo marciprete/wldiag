@@ -6,7 +6,7 @@ public final class UrlMappings {
 
     public static final String API_DIAGNOSTIC_IMAGE = "/api/di";
     public static final String API_CUSTOMERS = "/api/customers";
-    public static final String API_JTA = "api/jta";
+    public static final String API_JTA = "/api/jta";
 
     public static final String LIST = "list";
     public static final String SHOW = "show";
