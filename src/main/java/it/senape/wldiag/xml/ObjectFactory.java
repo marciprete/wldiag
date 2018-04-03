@@ -366,7 +366,7 @@ public class ObjectFactory {
     private final static QName _ClusterTypeClusterMessagingMode_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "cluster-messaging-mode");
     private final static QName _ClusterTypeDataSourceForAutomaticMigration_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "data-source-for-automatic-migration");
     private final static QName _ClusterTypeMigrationBasis_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "migration-basis");
-    private final static QName _ClusterTypeSingletonSqlQueryHelper_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "singleton-sql-query-helper");
+    private final static QName _ClusterTypeSingletonSqlQueryHelper_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "singleton-sql-query-filesystem");
     private final static QName _ClusterTypeWanSessionPersistenceTableName_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "wan-session-persistence-table-name");
     private final static QName _ClusterTypeDatabaseLessLeasingBasis_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "database-less-leasing-basis");
     private final static QName _ClusterTypeDataSourceForSessionPersistence_QNAME = new QName("http://xmlns.oracle.com/weblogic/domain", "data-source-for-session-persistence");
@@ -6047,7 +6047,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://xmlns.oracle.com/weblogic/domain", name = "singleton-sql-query-helper", scope = ClusterType.class)
+    @XmlElementDecl(namespace = "http://xmlns.oracle.com/weblogic/domain", name = "singleton-sql-query-filesystem", scope = ClusterType.class)
     public JAXBElement<String> createClusterTypeSingletonSqlQueryHelper(String value) {
         return new JAXBElement<String>(_ClusterTypeSingletonSqlQueryHelper_QNAME, String.class, ClusterType.class, value);
     }

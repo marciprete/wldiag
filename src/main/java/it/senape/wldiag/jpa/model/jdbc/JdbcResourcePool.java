@@ -4,7 +4,6 @@ import it.senape.wldiag.jpa.model.AbstractEntity;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -51,19 +50,6 @@ public class JdbcResourcePool extends AbstractEntity<Long> {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diagnostic_image_id")
     private DiagnosticImage diagnosticImage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resource_pool_id")
-    private JdbcResourcePool resourcePool;
-
-    public JdbcResourcePool getResourcePool() {
-        return resourcePool;
-    }
-
-    public void setResourcePool(JdbcResourcePool resourcePool) {
-        this.resourcePool = resourcePool;
-    }
-
 
     public String getPoolname() {
         return poolname;

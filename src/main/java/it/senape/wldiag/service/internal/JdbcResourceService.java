@@ -1,18 +1,16 @@
 package it.senape.wldiag.service.internal;
 
-import it.senape.wldiag.jpa.bridge.Converter;
 import it.senape.wldiag.jpa.bridge.JdbcResourceMapper;
 import it.senape.wldiag.jpa.model.jdbc.JdbcResource;
 import it.senape.wldiag.jpa.repository.JdbcResourceRepository;
 import it.senape.wldiag.message.JdbcResourceMessage;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by michele.arciprete on 26-Jan-18.
@@ -29,8 +27,12 @@ public class JdbcResourceService {
 
     @Transactional(readOnly = true)
     public JdbcResourceMessage get(Long id) {
-        JdbcResource entity = jdbcResourceRepository.findOne(id);
-        return JdbcResourceMapper.mapEntityIntoDTO(entity);
+        Optional<JdbcResource> entity = jdbcResourceRepository.findById(id);
+        JdbcResourceMessage message = new JdbcResourceMessage();
+        if(entity.isPresent()) {
+            message = JdbcResourceMapper.mapEntityIntoDTO(entity.get());
+        }
+        return message;
     }
 
     @Transactional(readOnly = true)

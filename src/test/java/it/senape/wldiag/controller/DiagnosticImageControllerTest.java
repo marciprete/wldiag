@@ -1,16 +1,17 @@
 package it.senape.wldiag.controller;
 
-import com.nitorcreations.junit.runners.NestedRunner;
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.config.WebTestConfig;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.exceptions.StorageException;
 import it.senape.wldiag.fixtures.DiagnosticImageDtoFixtures;
+import it.senape.wldiag.service.filesystem.DiagnosticImageResource;
+import it.senape.wldiag.service.filesystem.DiagnosticImageXmlService;
 import it.senape.wldiag.service.internal.DiagnosticImageService;
 import it.senape.wldiag.service.internal.StorageService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,8 +25,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,30 +34,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by michele.arciprete on 27-Mar-18
  */
-@RunWith(NestedRunner.class)
 public class DiagnosticImageControllerTest {
 
     private MockMvc mockMvc;
 
-    private DiagnosticImageService diagnosticImageService;
     private StorageService storageService;
+    private DiagnosticImageService diagnosticImageService;
+    private DiagnosticImageXmlService diagnosticImageXmlService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        diagnosticImageService = mock(DiagnosticImageService.class);
         storageService = mock(StorageService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new DiagnosticImageController(storageService, diagnosticImageService))
+        diagnosticImageService = mock(DiagnosticImageService.class);
+        diagnosticImageXmlService = mock(DiagnosticImageXmlService.class);
+        mockMvc = MockMvcBuilders.standaloneSetup(new DiagnosticImageController(
+                    storageService,
+                    diagnosticImageService,
+                    diagnosticImageXmlService))
                 .setCustomArgumentResolvers(WebTestConfig.pageRequestArgumentResolver())
                 .build();
     }
 
-    public class Retrieve {
+    @Nested
+    class Retrieve {
 
-        public class WhenOneImageIsPresent {
+        @Nested
+        class WhenOneImageIsPresent {
 
             private final DiagnosticImageDto diagnosticImageDto = DiagnosticImageDtoFixtures.createDiagnosticImageDto();
 
-            @Before
+            @BeforeEach
             public void setUp() throws Exception {
                 given(diagnosticImageService.findLatest(isA(Pageable.class)))
                         .willReturn(new PageImpl<>(
@@ -89,7 +96,8 @@ public class DiagnosticImageControllerTest {
                 ;
             }
 
-            public class WhenFileNameIsNull {
+            @Nested
+            class WhenFileNameIsNull {
                 @Test
                 public void showNotFoundPage() throws Exception {
                     diagnosticImageDto.setFileName(null);
@@ -102,7 +110,8 @@ public class DiagnosticImageControllerTest {
             }
         }
 
-        public class WhenNoImagesAreFound {
+        @Nested
+        class WhenNoImagesAreFound {
 
             @Test
             public void showNotFoundPage() throws Exception {
@@ -116,81 +125,84 @@ public class DiagnosticImageControllerTest {
         }
     }
 
-    public class Create {
+    @Nested
+    class Create {
 
         public static final String ADD_IMAGE_URL_TEMPLATE = UrlMappings.API_DIAGNOSTIC_IMAGE + "/" + UrlMappings.ADD;
-        public final static String COMPLIANT_IMAGE_FILE_NAME = "diagnostic_image_ManagedServer_1_2018_01_22_18_20_43.zip";
-        public final static String WRONG_IMAGE_FILE_NAME = "diagnostic_image_file.zip";
 
-        MockMultipartFile wrongFileName = new MockMultipartFile("diagnosticImage", WRONG_IMAGE_FILE_NAME, "text/plain", "some text".getBytes());
-        MockMultipartFile correctFileName = new MockMultipartFile("diagnosticImage", COMPLIANT_IMAGE_FILE_NAME, "text/plain", "some text".getBytes());
+        MockMultipartFile wrongFileName = new MockMultipartFile("diagnosticImage", DiagnosticImageDtoFixtures.WRONG_IMAGE_FILE_NAME, "text/plain", "some text".getBytes());
+        MockMultipartFile correctFileName = new MockMultipartFile("diagnosticImage", DiagnosticImageDtoFixtures.COMPLIANT_IMAGE_FILE_NAME, "text/plain", "some text".getBytes());
 
 
-        public class WhenDiagnosticImageIsNotValid {
+        @Nested
+        class WhenDiagnosticImageIsNotValid {
 
-            public class WhenImageNameIsNotValid {
+            @Nested
+            class WhenImageNameIsNotValid {
                 @Test
                 public void shouldReturnAnErrorMessage() throws Exception {
                     doNothing().when(storageService).store(isA(MultipartFile.class));
-                    mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                    mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                             .file(wrongFileName)
                             .param("customerId", "1"))
                             .andDo(print())
                             .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.['"+WRONG_IMAGE_FILE_NAME+"']", is(DiagnosticImageController.UPLOAD_FAILED_FILENAME_NOT_VALID)));
+                    .andExpect(jsonPath("$.['"+ DiagnosticImageDtoFixtures.WRONG_IMAGE_FILE_NAME+"']", is(DiagnosticImageController.UPLOAD_FAILED_FILENAME_NOT_VALID)));
 
                     verify(storageService, times(0)).store(isA(MultipartFile.class));
 
                 }
             }
 
-            public class WhenCustomerIdIsMissing {
+            @Nested
+            class WhenCustomerIdIsMissing {
 
                 @Test
                 public void thenSaveShouldFail() throws Exception {
                     doNothing().when(storageService).store(isA(MultipartFile.class));
-                    when(diagnosticImageService.save(isA(String.class),isA(Long.class))).thenReturn(false);
-                    mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                    when(diagnosticImageService.save(isA(DiagnosticImageDto.class))).thenReturn(false);
+                    mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                             .file(correctFileName))
                             .andDo(print())
                             .andExpect(status().is4xxClientError())
                     ;
 
                     verify(storageService, times(0)).store(isA(MultipartFile.class));
-                    verify(diagnosticImageService, times(0)).save(COMPLIANT_IMAGE_FILE_NAME,1L);
-
+                    verify(diagnosticImageService, times(0)).save(isA(DiagnosticImageDto.class));
                 }
             }
 
-            public class WhenMultipartFileIsMissing {
+            @Nested
+            class WhenMultipartFileIsMissing {
 
                 @Test
                 public void thenSaveShouldFail() throws Exception {
                     doNothing().when(storageService).store(isA(MultipartFile.class));
-                    when(diagnosticImageService.save(isA(String.class),isA(Long.class))).thenReturn(false);
-                    mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                    when(diagnosticImageService.save(isA(DiagnosticImageDto.class))).thenReturn(false);
+                    mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                             .param("customerId", "1"))
                             .andDo(print())
                             .andExpect(status().is4xxClientError())
                     ;
                     verify(storageService, times(0)).store(isA(MultipartFile.class));
-                    verify(diagnosticImageService, times(0)).save(COMPLIANT_IMAGE_FILE_NAME,1L);
+                    verify(diagnosticImageService, times(0)).save(isA(DiagnosticImageDto.class));
                 }
             }
 
-            public class WhenServiceFails {
+            @Nested
+            class WhenServiceFails {
 
                 public static final String STORAGE_EXCEPTION_TEXT = "TEST FAIL";
 
                 @Test
                 public void theStorageServiceFailsOnSaving() throws Exception {
                     doThrow(new StorageException(STORAGE_EXCEPTION_TEXT)).when(storageService).store(isA(MultipartFile.class));
-                    mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                    mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                             .file(correctFileName)
                             .param("customerId", "1"))
                             .andDo(print())
                             .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.['"+COMPLIANT_IMAGE_FILE_NAME +"']", is(STORAGE_EXCEPTION_TEXT)))
+                            .andExpect(jsonPath("$.['"+ DiagnosticImageDtoFixtures.COMPLIANT_IMAGE_FILE_NAME +"']", is(STORAGE_EXCEPTION_TEXT)))
                     ;
 
                     verify(storageService, times(1)).store(isA(MultipartFile.class));
@@ -199,37 +211,42 @@ public class DiagnosticImageControllerTest {
                 @Test
                 public void theDiagnosticImageServiceFailsOnSaving() throws Exception {
                     doNothing().when(storageService).store(isA(MultipartFile.class));
-                    when(diagnosticImageService.save(isA(String.class),isA(Long.class))).thenReturn(false);
-                    mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                    when(diagnosticImageService.save(isA(DiagnosticImageDto.class))).thenReturn(false);
+                    when(diagnosticImageXmlService.extract(isA(DiagnosticImageResource.class))).thenReturn(DiagnosticImageDtoFixtures.createDiagnosticImageDto());
+                    mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                             .file(correctFileName)
                             .param("customerId", "1"))
                             .andDo(print())
                             .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.['"+COMPLIANT_IMAGE_FILE_NAME +"']", is(DiagnosticImageController.SAVE_FAILED)))
+                            .andExpect(jsonPath("$.['"+ DiagnosticImageDtoFixtures.COMPLIANT_IMAGE_FILE_NAME +"']", is(DiagnosticImageController.SAVE_FAILED)))
                     ;
 
                     verify(storageService, times(1)).store(isA(MultipartFile.class));
-                    verify(diagnosticImageService, times(1)).save(COMPLIANT_IMAGE_FILE_NAME,1L);
+                    verify(diagnosticImageService, times(1)).save(isA(DiagnosticImageDto.class));
                 }
             }
 
         }
 
-        public class WhenDiagnosticImageIsValid {
+        @Nested
+        class WhenDiagnosticImageIsValid {
+
             @Test
-            public void shouldReturnResults() throws Exception {
+            public void shouldCreateOneDiagnosticImage() throws Exception {
                 doNothing().when(storageService).store(isA(MultipartFile.class));
-                when(diagnosticImageService.save(isA(String.class), isA(Long.class))).thenReturn(true);
-                mockMvc.perform(fileUpload(ADD_IMAGE_URL_TEMPLATE)
+                when(diagnosticImageService.save(isA(DiagnosticImageDto.class))).thenReturn(true);
+                when(diagnosticImageXmlService.extract(isA(DiagnosticImageResource.class)))
+                        .thenReturn(DiagnosticImageDtoFixtures.createDiagnosticImageDto());
+                mockMvc.perform(multipart(ADD_IMAGE_URL_TEMPLATE)
                         .file(correctFileName)
                         .param("customerId", "1"))
                         .andDo(print())
                         .andExpect(status().isOk())
-                .andExpect(jsonPath("$.['"+COMPLIANT_IMAGE_FILE_NAME+"']", is(DiagnosticImageController.SAVE_SUCCESSFUL)))
+                .andExpect(jsonPath("$.['"+ DiagnosticImageDtoFixtures.COMPLIANT_IMAGE_FILE_NAME+"']", is(DiagnosticImageController.SAVE_SUCCESSFUL)))
 
                 ;
                 verify(storageService, times(1)).store(isA(MultipartFile.class));
-                verify(diagnosticImageService, times(1)).save(COMPLIANT_IMAGE_FILE_NAME,1L);
+                verify(diagnosticImageService, times(1)).save(isA(DiagnosticImageDto.class));
 
             }
         }

@@ -21,9 +21,6 @@ public class Customer extends AbstractEntity<Long> {
             fetch = FetchType.LAZY)
     private Set<DiagnosticImage> diagnosticImages;
 
-    public Customer() {
-    }
-
     public String getName() {
         return name;
     }

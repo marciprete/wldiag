@@ -1,9 +1,7 @@
 package it.senape.wldiag.jpa.bridge;
 
 import it.senape.wldiag.dto.CustomerDto;
-import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.jpa.model.internal.Customer;
-import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

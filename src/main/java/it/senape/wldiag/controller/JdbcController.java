@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping(value= UrlMappings.API_JDBC)
 public class JdbcController {
 
+    public static final String ENABLED_PARAM = "enabled";
     JdbcResourceService jdbcResourceService;
     JdbcResourcePoolService jdbcResourcePoolService;
 
@@ -42,13 +43,8 @@ public class JdbcController {
     public Page<JdbcResourceMessage> getResourceList(@PathVariable Long resourcePoolId,
                                                      @RequestParam Map<String,String> allRequestParams,
                                                      Pageable pageRequest) {
-        System.out.println(pageRequest);
-        System.out.println(allRequestParams);
-        System.out.println(allRequestParams.get("enabled"));
-        System.out.println(!"all".equalsIgnoreCase(allRequestParams.get("enabled")));
-        if(allRequestParams.get("enabled") != null &&
-                !"all".equalsIgnoreCase(allRequestParams.get("enabled"))) {
-            System.out.println("Ecco");
+        if(allRequestParams.get(ENABLED_PARAM) != null &&
+                !"all".equalsIgnoreCase(allRequestParams.get(ENABLED_PARAM))) {
             return jdbcResourceService.findAllResourcesFiltered(resourcePoolId, pageRequest);
         }
         return jdbcResourceService.findAllByResourcePoolId(resourcePoolId, pageRequest);

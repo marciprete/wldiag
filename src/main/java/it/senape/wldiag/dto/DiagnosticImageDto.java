@@ -1,5 +1,7 @@
 package it.senape.wldiag.dto;
 
+import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -15,6 +17,9 @@ public class DiagnosticImageDto implements Serializable {
     private String customerName;
     private Long serverId;
     private String serverName;
+
+    private JtaDto jtaDto;
+    private JdbcResourcePoolDto jdbcResourcePool;
 
     public String getFileName() {
         return fileName;
@@ -64,6 +69,14 @@ public class DiagnosticImageDto implements Serializable {
         this.serverName = serverName;
     }
 
+    public JtaDto getJtaDto() {
+        return jtaDto;
+    }
+
+    public void setJtaDto(JtaDto jtaDto) {
+        this.jtaDto = jtaDto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,6 +109,8 @@ public class DiagnosticImageDto implements Serializable {
                 ", customerName='" + customerName + '\'' +
                 ", serverId=" + serverId +
                 ", serverName='" + serverName + '\'' +
+                ", jta ='" + jtaDto + '\'' +
+                ", jdbcResourcePool='" + jdbcResourcePool + '\'' +
                 '}';
     }
 
@@ -105,5 +120,13 @@ public class DiagnosticImageDto implements Serializable {
 
     public Long getImageId() {
         return imageId;
+    }
+
+    public void setJdbcResourcePool(JdbcResourcePoolDto jdbcResourcePool) {
+        this.jdbcResourcePool = jdbcResourcePool;
+    }
+
+    public JdbcResourcePoolDto getJdbcResourcePool() {
+        return jdbcResourcePool;
     }
 }
