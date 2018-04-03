@@ -1,7 +1,8 @@
 package it.senape.wldiag.jpa.model.jta;
 
+import it.senape.wldiag.jpa.model.AbstractEntity;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -9,10 +10,7 @@ import java.util.*;
  * Created by michele.arciprete on 14-Dec-17.
  */
 @Entity
-public class Transaction implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Transaction extends AbstractEntity<Long> {
 
     private String xid;//="BEA1-1E47ED1E038FAAAEA9A1"
     private String state;//="active"
@@ -23,7 +21,8 @@ public class Transaction implements Serializable {
     @Column(length = 750)
     private String ownerTM;//="ServerTM[ServerCoordinatorDescriptor=(CoordinatorURL=ManagedServer_1+172.26.80.143:7011+ebooking+t3+ CoordinatorNonSecureURL=ManagedServer_1+172.26.80.143:7011+ebooking+t3+ coordinatorSecureURL=ManagedServer_1+172.26.80.143:7503+ebooking+t3s+, XAResources={WSATGatewayRM_ManagedServer_1_ebooking, EBOOKING_DATASOURCE_ebooking},NonXAResources={})]"
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name="internal_thread_id")
     private InternalThread activeThread;//="Thread[StartupThread_OPTION_BOOKINGS[GRIMALDI FERRY],5,Pooled Threads]"
 
@@ -43,10 +42,12 @@ public class Transaction implements Serializable {
             fetch = FetchType.LAZY)
     private Set<Property> globalProperties = new LinkedHashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private Set<Resource> resources;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "jta_id")
     private Jta jta;
 
@@ -58,20 +59,10 @@ public class Transaction implements Serializable {
     )
     private List<TransactionServer> servers = new LinkedList<>();
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getXid() {
         return xid;
     }
 
-    
     public void setXid(String xid) {
         this.xid = xid;
     }
@@ -220,7 +211,7 @@ public class Transaction implements Serializable {
     @Override
     public String toString() {
         return "Transaction{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", xid='" + xid + '\'' +
                 ", state='" + state + '\'' +
                 ", status='" + status + '\'' +

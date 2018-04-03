@@ -21,7 +21,7 @@ public class InternalThread implements Serializable {
 
     @OneToMany(
             mappedBy = "activeThread",
-            cascade = CascadeType.PERSIST,
+            cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<Transaction> transactions = new LinkedList<>();

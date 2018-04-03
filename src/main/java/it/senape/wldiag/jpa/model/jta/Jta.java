@@ -45,11 +45,14 @@ public class Jta implements Serializable {
 
     private Integer transactionCount;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,
+        cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name = "diagnostic_image_id")
     private DiagnosticImage diagnosticImage;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private TMXAResource tmxaResource;
 
     @OneToMany(

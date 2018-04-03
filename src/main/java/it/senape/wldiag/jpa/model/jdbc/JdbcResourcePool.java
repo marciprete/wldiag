@@ -47,7 +47,8 @@ public class JdbcResourcePool extends AbstractEntity<Long> {
     private Set<DeadResource> deadResources = new LinkedHashSet<>();
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "diagnostic_image_id")
     private DiagnosticImage diagnosticImage;
 

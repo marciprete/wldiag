@@ -21,7 +21,8 @@ public class Property implements Serializable {
     @Column(length = 750)
     private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 

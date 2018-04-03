@@ -48,7 +48,8 @@ public class JdbcResource extends AbstractEntity<Long> {
     @Type(type="text")
     private String stackTrace;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "jdbc_resource_pool_id")
     private JdbcResourcePool resourcePool;
 
