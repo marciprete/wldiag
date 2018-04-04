@@ -1,7 +1,7 @@
 package it.senape.wldiag.controller;
 
 import it.senape.wldiag.fixtures.CustomerDtoFixtures;
-import it.senape.wldiag.service.internal.CustomerService;
+import it.senape.wldiag.service.jpa.CustomerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

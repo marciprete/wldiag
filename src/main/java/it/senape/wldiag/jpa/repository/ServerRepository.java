@@ -4,6 +4,8 @@ import it.senape.wldiag.jpa.model.jta.Server;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * Created by michele.arciprete on 17-Dec-17.
  */
@@ -12,5 +14,5 @@ public interface ServerRepository extends CrudRepository<Server,Long> {
 
     Server findByServerNameAndUrl(String serverName, String url);
 
-    Server findByUrl(String url);
+    Optional<Server> findByUrl(String url);
 }

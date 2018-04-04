@@ -1,12 +1,9 @@
 package it.senape.wldiag.jpa.model.jta;
 
+import it.senape.wldiag.jpa.model.AbstractEntity;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
 
 /**
  * Created by michele.arciprete on 14-Dec-17.
@@ -14,11 +11,7 @@ import java.io.Serializable;
 @Entity
 //@NaturalIdCache
 //@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Server implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Server extends AbstractEntity<Long> {
 
     private String serverName;
 
@@ -34,14 +27,6 @@ public class Server implements Serializable {
     }
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getServerName() {
@@ -79,7 +64,7 @@ public class Server implements Serializable {
     @Override
     public String toString() {
         return "Server{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", serverName='" + serverName + '\'' +
                 ", label='" + label + '\'' +
                 ", url='" + url + '\'' +

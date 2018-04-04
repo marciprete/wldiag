@@ -1,12 +1,10 @@
 package it.senape.wldiag.controller;
 
 import it.senape.wldiag.config.UrlMappings;
-import it.senape.wldiag.jpa.model.jdbc.JdbcResource;
-import it.senape.wldiag.jpa.model.jdbc.JdbcResourcePool;
 import it.senape.wldiag.message.JdbcResourceMessage;
 import it.senape.wldiag.message.JdbcResourcePoolMessage;
-import it.senape.wldiag.service.internal.JdbcResourcePoolService;
-import it.senape.wldiag.service.internal.JdbcResourceService;
+import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
+import it.senape.wldiag.service.jpa.JdbcResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +20,9 @@ import java.util.Map;
 @RequestMapping(value= UrlMappings.API_JDBC)
 public class JdbcController {
 
-    public static final String ENABLED_PARAM = "enabled";
-    JdbcResourceService jdbcResourceService;
-    JdbcResourcePoolService jdbcResourcePoolService;
+    private static final String ENABLED_PARAM = "enabled";
+    private JdbcResourceService jdbcResourceService;
+    private JdbcResourcePoolService jdbcResourcePoolService;
 
     @Autowired
     public JdbcController(JdbcResourceService jdbcResourceService, JdbcResourcePoolService jdbcResourcePoolService) {

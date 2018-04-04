@@ -248,7 +248,7 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;/simpleType>
  *         &lt;/element>
  *         &lt;element name="classpath-servlet-disabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
- *         &lt;element name="default-internal-servlets-disabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="default-jpa-servlets-disabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="server-version" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="startup-mode" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="server-life-cycle-timeout-val" minOccurs="0">
@@ -603,7 +603,7 @@ public class ServerType
     protected Integer restartDelaySeconds;
     @XmlElement(name = "classpath-servlet-disabled", defaultValue = "false")
     protected Boolean classpathServletDisabled;
-    @XmlElement(name = "default-internal-servlets-disabled", defaultValue = "false")
+    @XmlElement(name = "default-jpa-servlets-disabled", defaultValue = "false")
     protected Boolean defaultInternalServletsDisabled;
     @XmlElementRef(name = "server-version", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
     protected JAXBElement<String> serverVersion;

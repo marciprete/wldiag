@@ -2,7 +2,7 @@ package it.senape.wldiag.controller;
 
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.message.JtaMessage;
-import it.senape.wldiag.service.internal.JtaService;
+import it.senape.wldiag.service.jpa.JtaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class JtaController {
 
     private final static Logger log = LoggerFactory.getLogger(JtaController.class);
 
-    JtaService jtaService;
+    private JtaService jtaService;
 
     @Autowired
     public JtaController(JtaService jtaService) {
@@ -37,4 +37,5 @@ public class JtaController {
         log.info("Request JTA List");
         return jtaService.findAll(pageRequest);
     }
+
 }

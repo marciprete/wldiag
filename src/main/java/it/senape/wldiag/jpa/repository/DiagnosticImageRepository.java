@@ -1,7 +1,6 @@
 package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
-import it.senape.wldiag.jpa.model.jta.Server;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -47,5 +46,7 @@ public interface DiagnosticImageRepository extends PagingAndSortingRepository<Di
 //                    "where di.server = :server")
 //    Page<DiagnosticImage> findAllByServer(Server server, Pageable pageable);
 
+
+    void deleteByFileNameAndCustomer_Id(String fileName, Long customerId);
 
 }

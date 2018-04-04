@@ -5,8 +5,8 @@ import it.senape.wldiag.config.WebTestConfig;
 import it.senape.wldiag.dto.ResourceDto;
 import it.senape.wldiag.fixtures.JdbcResourceFixtures;
 import it.senape.wldiag.message.JdbcResourcePoolMessage;
-import it.senape.wldiag.service.internal.JdbcResourcePoolService;
-import it.senape.wldiag.service.internal.JdbcResourceService;
+import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
+import it.senape.wldiag.service.jpa.JdbcResourceService;
 import org.junit.jupiter.api.*;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +29,8 @@ public class JdbcControllerTest {
 
     private MockMvc mockMvc;
 
-    JdbcResourceService jdbcResourceService;
-    JdbcResourcePoolService jdbcResourcePoolService;
+    private JdbcResourceService jdbcResourceService;
+    private JdbcResourcePoolService jdbcResourcePoolService;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -51,7 +51,7 @@ public class JdbcControllerTest {
             private ResourceDto jdbcResourceDto;
             private JdbcResourcePoolMessage jdbcResourcePoolMessage;
 
-            @BeforeAll
+            @BeforeEach
             public void createJdbcResourcePoolMessage() {
                 jdbcResourceDto = JdbcResourceFixtures.createJdbcResourceDto();
                 jdbcResourcePoolMessage = JdbcResourceFixtures.createJdbcResourcePoolMessage();

@@ -3,11 +3,11 @@ package it.senape.wldiag.controller;
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.exceptions.StorageException;
-import it.senape.wldiag.service.filesystem.DiagnosticImageResource;
-import it.senape.wldiag.service.filesystem.DiagnosticImageXmlService;
-import it.senape.wldiag.service.internal.DiagnosticImageService;
-import it.senape.wldiag.service.internal.StorageProperties;
-import it.senape.wldiag.service.internal.StorageService;
+import it.senape.wldiag.service.jpa.DiagnosticImageService;
+import it.senape.wldiag.service.jpa.StorageProperties;
+import it.senape.wldiag.service.jpa.StorageService;
+import it.senape.wldiag.service.xml.DiagnosticImageResource;
+import it.senape.wldiag.service.xml.DiagnosticImageXmlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,5 +138,19 @@ public class DiagnosticImageController {
 
         return ResponseEntity.ok(results);
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "{diagnosticImage}/{customerId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> delete(@PathVariable("diagnosticImage") String fileName,
+                                         @PathVariable("customerId") Long customerId) {
+        try {
+            diagnosticImageService.delete(fileName, customerId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().body("OK");
+    }
+
 
 }

@@ -140,7 +140,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="jms-connection-consumer" type="{http://xmlns.oracle.com/weblogic/domain}jms-connection-consumerType" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="auto-deploy-for-submodules-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="admin-console" type="{http://xmlns.oracle.com/weblogic/domain}admin-consoleType" minOccurs="0"/>
- *         &lt;element name="internal-apps-deploy-on-demand-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="jpa-apps-deploy-on-demand-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="guardian-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="ocm-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="msg-id-prefix-compatibility-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
@@ -410,7 +410,7 @@ public class DomainType
     protected Boolean autoDeployForSubmodulesEnabled;
     @XmlElementRef(name = "admin-console", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
     protected JAXBElement<AdminConsoleType> adminConsole;
-    @XmlElement(name = "internal-apps-deploy-on-demand-enabled", defaultValue = "true")
+    @XmlElement(name = "jpa-apps-deploy-on-demand-enabled", defaultValue = "true")
     protected Boolean internalAppsDeployOnDemandEnabled;
     @XmlElement(name = "guardian-enabled", defaultValue = "false")
     protected Boolean guardianEnabled;

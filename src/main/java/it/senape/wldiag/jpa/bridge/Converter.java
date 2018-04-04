@@ -1,7 +1,8 @@
 package it.senape.wldiag.jpa.bridge;
 
 import it.senape.wldiag.dto.PropertyDto;
-import it.senape.wldiag.jpa.model.jta.*;
+import it.senape.wldiag.jpa.model.jta.EjbTransactionProperty;
+import it.senape.wldiag.jpa.model.jta.Property;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -64,4 +65,5 @@ public class Converter {
         return LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
     }
+
 }

@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.internal;
+package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.exceptions.StorageException;
 import org.springframework.core.io.Resource;

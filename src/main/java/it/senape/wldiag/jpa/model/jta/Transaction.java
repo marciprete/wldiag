@@ -71,7 +71,6 @@ public class Transaction extends AbstractEntity<Long> {
         return state;
     }
 
-    
     public void setState(String state) {
         this.state = state;
     }
@@ -80,7 +79,6 @@ public class Transaction extends AbstractEntity<Long> {
         return status;
     }
 
-    
     public void setStatus(String status) {
         this.status = status;
     }
@@ -89,7 +87,6 @@ public class Transaction extends AbstractEntity<Long> {
         return beginTime;
     }
 
-    
     public void setBeginTime(LocalDateTime beginTime) {
         this.beginTime = beginTime;
     }
@@ -98,7 +95,6 @@ public class Transaction extends AbstractEntity<Long> {
         return coordinatorURL;
     }
 
-    
     public void setCoordinatorURL(String coordinatorURL) {
         this.coordinatorURL = coordinatorURL;
     }
@@ -107,7 +103,6 @@ public class Transaction extends AbstractEntity<Long> {
         return ownerTM;
     }
 
-    
     public void setOwnerTM(String ownerTM) {
         this.ownerTM = ownerTM;
     }
@@ -116,7 +111,6 @@ public class Transaction extends AbstractEntity<Long> {
         return activeThread;
     }
 
-    
     public void setActiveThread(InternalThread activeThread) {
         this.activeThread = activeThread;
     }
@@ -125,7 +119,6 @@ public class Transaction extends AbstractEntity<Long> {
         return repliesOwedMe;
     }
 
-    
     public void setRepliesOwedMe(Integer repliesOwedMe) {
         this.repliesOwedMe = repliesOwedMe;
     }
@@ -134,7 +127,6 @@ public class Transaction extends AbstractEntity<Long> {
         return repliesOwedOthers;
     }
 
-    
     public void setRepliesOwedOthers(Integer repliesOwedOthers) {
         this.repliesOwedOthers = repliesOwedOthers;
     }

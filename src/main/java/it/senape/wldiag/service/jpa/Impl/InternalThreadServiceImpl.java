@@ -1,8 +1,8 @@
-package it.senape.wldiag.service.internal.Impl;
+package it.senape.wldiag.service.jpa.Impl;
 
 import it.senape.wldiag.jpa.model.jta.InternalThread;
 import it.senape.wldiag.jpa.repository.InternalThreadRepository;
-import it.senape.wldiag.service.internal.InternalThreadService;
+import it.senape.wldiag.service.jpa.InternalThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

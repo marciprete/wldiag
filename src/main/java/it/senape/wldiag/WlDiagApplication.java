@@ -1,6 +1,6 @@
 package it.senape.wldiag;
 
-import it.senape.wldiag.service.internal.StorageProperties;
+import it.senape.wldiag.service.jpa.StorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

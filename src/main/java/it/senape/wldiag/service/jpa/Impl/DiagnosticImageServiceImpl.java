@@ -1,22 +1,26 @@
-package it.senape.wldiag.service.internal.Impl;
+package it.senape.wldiag.service.jpa.Impl;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
+import it.senape.wldiag.dto.JtaDto;
+import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
 import it.senape.wldiag.jpa.bridge.DiagnosticImageMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
-import it.senape.wldiag.service.internal.DiagnosticImageService;
-import it.senape.wldiag.service.internal.JdbcResourcePoolService;
-import it.senape.wldiag.service.internal.JtaService;
-import it.senape.wldiag.service.internal.StorageService;
+import it.senape.wldiag.service.jpa.DiagnosticImageService;
+import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
+import it.senape.wldiag.service.jpa.JtaService;
+import it.senape.wldiag.service.jpa.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +60,7 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
     @Override
     @Transactional
-    public Boolean save(DiagnosticImageDto dto) {
+    public Boolean save(DiagnosticImageDto dto) throws TransactionException {
         Boolean result = false;
 
         Optional<Customer> customer = customerRepository.findById(dto.getCustomerId());
@@ -72,16 +76,31 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
             diagnosticImage.setCustomer(customer.get());
             diagnosticImage.setAcquisitionTime(dto.getAcquisitionTime());
             diagnosticImage.setServerName(dto.getServerName());
-            diagnosticImage = diagnosticImageRepository.save(diagnosticImage);
+            diagnosticImage.setFileName(dto.getFileName());
 
-            jtaService.save(dto.getJtaDto());
-            jdbcResourcePoolService.save(dto.getJdbcResourcePool());
-
-            if (diagnosticImage != null) {
-                result = diagnosticImage.getId() != null;
+            try {
+                diagnosticImage = diagnosticImageRepository.save(diagnosticImage);
+                JtaDto jtaDto = dto.getJtaDto();
+                jtaDto.setDiagnosticImageId(diagnosticImage.getId());
+                jtaService.save(jtaDto);
+                JdbcResourcePoolDto jdbcResourcePool = dto.getJdbcResourcePool();
+                jdbcResourcePool.setDiagnosticImageId(diagnosticImage.getId());
+                jdbcResourcePoolService.save(jdbcResourcePool);
+                if (diagnosticImage != null) {
+                    result = diagnosticImage.getId() != null;
+                }
+            } catch (TransactionException txe) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
+
         }
+        log.error("Customer not found with id {}", dto.getCustomerId());
         return result;
+    }
+
+    @Override
+    public void delete(String fileName, Long customerId) {
+        diagnosticImageRepository.deleteByFileNameAndCustomer_Id(fileName, customerId);
     }
 
     @Override
@@ -119,32 +138,5 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
         Iterable<DiagnosticImage> entities = diagnosticImageRepository.findAll();
         return DiagnosticImageMapper.mapEntitiesIntoDTOs(entities);
     }
-
-    /*
-     */
-
-//    @Transactional
-//    private Server extractServerFromDto(ServerDTO serverDTO) {
-//        String serverUrl = serverDTO.getUrl();
-//        String[] parts = serverUrl.split("\\+");
-//        String serverName = parts[0];
-//        String url = parts[1];
-//        String domain = parts[2];
-//        String connection = parts[3];
-//
-//        Server server = serverRepository.findByUrl(url);
-//        if (server == null || server.getId() == 0) {
-//            server = new Server();
-//            server.setServerName(serverName);
-//            server.setUrl(url);
-//            server.setConnection(connection);
-//            server.setDomain(domain);
-//            server = serverRepository.save(server);
-//        }
-//        return server;
-//    }
-
-
-
 
 }

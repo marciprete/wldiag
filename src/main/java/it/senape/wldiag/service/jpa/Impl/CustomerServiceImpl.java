@@ -1,10 +1,10 @@
-package it.senape.wldiag.service.internal.Impl;
+package it.senape.wldiag.service.jpa.Impl;
 
 import it.senape.wldiag.dto.CustomerDto;
 import it.senape.wldiag.jpa.bridge.CustomerMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
-import it.senape.wldiag.service.internal.CustomerService;
+import it.senape.wldiag.service.jpa.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository) {

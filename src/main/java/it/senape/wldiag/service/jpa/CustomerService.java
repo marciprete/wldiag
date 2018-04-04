@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.internal;
+package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.dto.CustomerDto;
 import org.springframework.data.domain.Page;

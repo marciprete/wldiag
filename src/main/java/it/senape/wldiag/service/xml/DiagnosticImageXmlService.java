@@ -1,9 +1,9 @@
-package it.senape.wldiag.service.filesystem;
+package it.senape.wldiag.service.xml;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
-import it.senape.wldiag.service.internal.StorageService;
+import it.senape.wldiag.service.jpa.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,7 @@ public class DiagnosticImageXmlService {
     private DiagnosticImageDto extractFiles(DiagnosticImageResource resource) {
         DiagnosticImageDto diagnosticImage = new DiagnosticImageDto();
         Path path = resource.getPath();
+        diagnosticImage.setFileName(path.getFileName().toString());
         diagnosticImage.setServerName(resource.getServerName());
         diagnosticImage.setAcquisitionTime(resource.getAcquisitionTime());
 

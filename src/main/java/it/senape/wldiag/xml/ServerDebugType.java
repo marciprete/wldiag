@@ -194,7 +194,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="debug-jdbcsql" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-jdbcrmi" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-jdbc-driver-logging" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
- *         &lt;element name="debug-jdbc-internal" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="debug-jdbc-jpa" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-messaging-bridge-startup" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-messaging-bridge-runtime" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-messaging-bridge-runtime-verbose" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
@@ -253,7 +253,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="debug-deployment" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-deployment-service" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-deployment-service-status-updates" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
- *         &lt;element name="debug-deployment-service-internal" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="debug-deployment-service-jpa" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-deployment-service-transport" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="debug-deployment-service-transport-http" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="master-deployer" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
@@ -944,7 +944,7 @@ public class ServerDebugType
     protected Boolean debugJdbcrmi;
     @XmlElement(name = "debug-jdbc-driver-logging", defaultValue = "false")
     protected Boolean debugJdbcDriverLogging;
-    @XmlElement(name = "debug-jdbc-internal", defaultValue = "false")
+    @XmlElement(name = "debug-jdbc-jpa", defaultValue = "false")
     protected Boolean debugJdbcInternal;
     @XmlElement(name = "debug-messaging-bridge-startup", defaultValue = "false")
     protected Boolean debugMessagingBridgeStartup;
@@ -1020,7 +1020,7 @@ public class ServerDebugType
     protected Boolean debugDeploymentService;
     @XmlElement(name = "debug-deployment-service-status-updates")
     protected Boolean debugDeploymentServiceStatusUpdates;
-    @XmlElement(name = "debug-deployment-service-internal")
+    @XmlElement(name = "debug-deployment-service-jpa")
     protected Boolean debugDeploymentServiceInternal;
     @XmlElement(name = "debug-deployment-service-transport")
     protected Boolean debugDeploymentServiceTransport;

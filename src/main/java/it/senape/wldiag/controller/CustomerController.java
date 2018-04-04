@@ -2,7 +2,7 @@ package it.senape.wldiag.controller;
 
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.dto.CustomerDto;
-import it.senape.wldiag.service.internal.CustomerService;
+import it.senape.wldiag.service.jpa.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,8 +32,4 @@ public class CustomerController {
     public List<CustomerDto> list() {
         return customerService.findAll();
     }
-
-
-
-
 }

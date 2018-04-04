@@ -11,7 +11,7 @@ import java.util.Objects;
 public class TransactionServer implements Serializable {
 
     @Embeddable
-    public class TransactionServerPK implements Serializable {
+    public static class TransactionServerPK implements Serializable {
 
         @Column(name = "transaction_id")
         private Long transactionId;
@@ -68,13 +68,12 @@ public class TransactionServer implements Serializable {
     @EmbeddedId
     private TransactionServerPK id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "transaction_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY,
+        cascade = CascadeType.REMOVE)
     @MapsId("transactionId")
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "server_id", insertable = false, updatable = false)
     @MapsId("serverId")
     private Server server;
 

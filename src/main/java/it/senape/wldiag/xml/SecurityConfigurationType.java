@@ -65,7 +65,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="enforce-strict-url-pattern" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="enforce-valid-basic-auth-credentials" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="console-full-delegation-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
- *         &lt;element name="default-realm-internal" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="default-realm-jpa" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="excluded-domain-name" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="cross-domain-security-enabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *       &lt;/sequence>
@@ -143,7 +143,7 @@ public class SecurityConfigurationType
     protected Boolean enforceValidBasicAuthCredentials;
     @XmlElement(name = "console-full-delegation-enabled", defaultValue = "false")
     protected Boolean consoleFullDelegationEnabled;
-    @XmlElementRef(name = "default-realm-internal", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
+    @XmlElementRef(name = "default-realm-jpa", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
     protected JAXBElement<String> defaultRealmInternal;
     @XmlElement(name = "excluded-domain-name", nillable = true)
     protected List<String> excludedDomainName;

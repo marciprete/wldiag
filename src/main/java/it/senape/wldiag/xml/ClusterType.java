@@ -134,7 +134,7 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;/simpleType>
  *         &lt;/element>
  *         &lt;element name="fencing-grace-period-millis" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="singleton-sql-query-filesystem" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="singleton-sql-query-xml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="number-of-servers-in-cluster-address" minOccurs="0">
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}int">
@@ -332,7 +332,7 @@ public class ClusterType
     protected Integer healthCheckPeriodsUntilFencing;
     @XmlElement(name = "fencing-grace-period-millis", defaultValue = "30000")
     protected Integer fencingGracePeriodMillis;
-    @XmlElementRef(name = "singleton-sql-query-filesystem", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
+    @XmlElementRef(name = "singleton-sql-query-xml", namespace = "http://xmlns.oracle.com/weblogic/domain", type = JAXBElement.class, required = false)
     protected JAXBElement<String> singletonSqlQueryHelper;
     @XmlElement(name = "number-of-servers-in-cluster-address", defaultValue = "3")
     protected Integer numberOfServersInClusterAddress;

@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.filesystem;
+package it.senape.wldiag.service.xml;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
  */
 public class DiagnosticImageResource {
 
-    Path path;
-    String serverName;
-    LocalDateTime acquisitionTime;
+    private Path path;
+    private String serverName;
+    private LocalDateTime acquisitionTime;
 
     public DiagnosticImageResource(Path path, String serverName, LocalDateTime acquisitionTime) {
         this.path = path;

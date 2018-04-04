@@ -1,13 +1,15 @@
-package it.senape.wldiag.service.internal.Impl;
+package it.senape.wldiag.service.jpa.Impl;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
+import it.senape.wldiag.dto.JtaDto;
+import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
 import it.senape.wldiag.fixtures.CustomerFixtures;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
-import it.senape.wldiag.service.internal.JdbcResourcePoolService;
-import it.senape.wldiag.service.internal.JtaService;
-import it.senape.wldiag.service.internal.StorageService;
+import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
+import it.senape.wldiag.service.jpa.JtaService;
+import it.senape.wldiag.service.jpa.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,10 +17,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by michele.arciprete on 30-Mar-18
@@ -48,23 +49,11 @@ class DiagnosticImageServiceTest {
                 jdbcResourcePoolService);
     }
 
-    @Nested
-    class Retrieve {
-
-        @Test
-        void findById() {
-            assertNotNull(service);
-        }
-
-//        @Test
-//        void findLatest() {
-//        }
+//    @Nested
+//    class Retrieve {
 //
-//        @Test
-//        void findAll() {
-//        }
-
-    }
+//
+//    }
 
 
     @Nested
@@ -89,15 +78,21 @@ class DiagnosticImageServiceTest {
                     image.setId(1l);
 
                     when(storageService.load(isA(String.class))).thenReturn(new File("f").toPath());
-//                    when(diagnosticImageFileExtractorHelper.extractFiles(isA(Path.class),isA(DiagnosticImage.class)))
-//                            .thenReturn(true);
+                    when(customerRepository.findById(isA(Long.class)))
+                            .thenReturn(Optional.of(CustomerFixtures.createCustomer()));
                     when(diagnosticImageRepository.save(isA(DiagnosticImage.class)))
                             .thenReturn(image);
 
-                    assertTrue(service.save(isA(DiagnosticImageDto.class)));
+                    when(jtaService.save(isA(JtaDto.class))).thenReturn(new JtaDto());
 
-                    verify(diagnosticImageRepository, times(1)).findByFileNameAndCustomerId(isA(String.class),
-                            isA(Long.class));
+                    DiagnosticImageDto diagnosticImageDto = new DiagnosticImageDto();
+                    diagnosticImageDto.setCustomerId(1L);
+                    diagnosticImageDto.setJtaDto(new JtaDto());
+                    diagnosticImageDto.setJdbcResourcePool(new JdbcResourcePoolDto());
+                    service.save(diagnosticImageDto);
+
+//                    verify(diagnosticImageRepository, times(1)).findByFileNameAndCustomerId(isA(String.class),
+//                            isA(Long.class));
 //                    verify(diagnosticImageFileExtractorHelper, times(1))
 //                            .extractFiles(isA(Path.class),isA(DiagnosticImage.class));
                 }

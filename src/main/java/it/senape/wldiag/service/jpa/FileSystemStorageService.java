@@ -1,9 +1,7 @@
-package it.senape.wldiag.service.internal;
+package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.exceptions.StorageException;
 import it.senape.wldiag.exceptions.StorageFileNotFoundException;
-import it.senape.wldiag.service.internal.StorageProperties;
-import it.senape.wldiag.service.internal.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -11,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;

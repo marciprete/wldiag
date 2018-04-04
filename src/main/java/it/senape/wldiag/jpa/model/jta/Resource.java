@@ -1,34 +1,29 @@
 package it.senape.wldiag.jpa.model.jta;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import it.senape.wldiag.jpa.model.AbstractEntity;
+import org.hibernate.annotations.NaturalId;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by michele.arciprete on 14-Dec-17.
  */
 @Entity
-public class Resource implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Resource extends AbstractEntity<Long> {
 
     private String name;//="EBOOKING_DATASOURCE_ebooking"
     private String state;//="started"
+
+    @NaturalId
     private String xid;//="BEA1-1E47ED1E038FAAAEA9A1-45424F4F4B494E475F44415441534F555243455F65626F6F6B696E67"
     private Boolean busy;//="false"
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -73,7 +68,7 @@ public class Resource implements Serializable {
     @Override
     public String toString() {
         return "Resource{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", state='" + state + '\'' +
                 ", xid='" + xid + '\'' +
