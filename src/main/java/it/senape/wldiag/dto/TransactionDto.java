@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import java.io.Serializable;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,13 +22,13 @@ public class TransactionDto implements Serializable {
     private Integer repliesOwedOthers;//="0"
     private Boolean retry;//="false"
 
-    private Set<PropertyDto> localProperties = new LinkedHashSet<>();
+    private Set<PropertyDto> localProperties = new HashSet<>();
 
-    private Set<PropertyDto> globalProperties = new LinkedHashSet<>();
+    private Set<PropertyDto> globalProperties = new HashSet<>();
 
-    private Set<ServerDto> servers = new LinkedHashSet<>();
+    private Set<ServerDto> servers = new HashSet<>();
 
-    private Set<ResourceDto> resources = new LinkedHashSet<>();
+    private Set<ResourceDto> resources = new HashSet<>();
 
     public String getXid() {
         return xid;

@@ -34,17 +34,18 @@ public class Transaction extends AbstractEntity<Long> {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private Set<Property> localProperties = new LinkedHashSet<>();
+    private Set<Property> localProperties = new HashSet<>();
 
     @OneToMany(mappedBy = "transaction",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private Set<Property> globalProperties = new LinkedHashSet<>();
+    private Set<Property> globalProperties = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE)
-    private Set<Resource> resources;
+    @OneToMany(mappedBy = "transaction",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private Set<Resource> resources = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
@@ -57,7 +58,7 @@ public class Transaction extends AbstractEntity<Long> {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<TransactionServer> servers = new LinkedList<>();
+    private List<TransactionServer> servers = new ArrayList<>();
 
     public String getXid() {
         return xid;

@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -87,30 +89,30 @@ public class JtaServiceImpl implements JtaService {
             diagnosticImage.setId(dto.getDiagnosticImageId());
             entry.setDiagnosticImage(diagnosticImage);
 
-            dto.getTransactions().forEach(transactionDTO -> {
+            dto.getTransactions().forEach(transactionDto -> {
                 Transaction transaction = new Transaction();
-                transaction.setXid(transactionDTO.getXid());
-                transaction.setState(transactionDTO.getState());
-                transaction.setStatus(transactionDTO.getStatus());
-                transaction.setBeginTime(Converter.fromLongToLocalDateTime(transactionDTO.getBeginTime()));
-                transaction.setCoordinatorURL(transactionDTO.getCoordinatorURL());
-                transaction.setOwnerTM(transactionDTO.getOwnerTM());
+                transaction.setXid(transactionDto.getXid());
+                transaction.setState(transactionDto.getState());
+                transaction.setStatus(transactionDto.getStatus());
+                transaction.setBeginTime(Converter.fromLongToLocalDateTime(transactionDto.getBeginTime()));
+                transaction.setCoordinatorURL(transactionDto.getCoordinatorURL());
+                transaction.setOwnerTM(transactionDto.getOwnerTM());
 
-                InternalThread it = internalThreadService.save(transactionDTO.getActiveThread());
+                InternalThread it = internalThreadService.save(transactionDto.getActiveThread());
                 if(it!= null) {
                     transaction.setActiveThread(it);
                 }
 
-                transaction.setRepliesOwedMe(transactionDTO.getRepliesOwedMe());
-                transaction.setRetry(transactionDTO.isRetry());
+                transaction.setRepliesOwedMe(transactionDto.getRepliesOwedMe());
+                transaction.setRetry(transactionDto.isRetry());
 
-                transactionDTO.getGlobalProperties().forEach(globalProp -> {
+                transactionDto.getGlobalProperties().forEach(globalProp -> {
                     Property p = Converter.convertDtoToEntity(globalProp);
                     transaction.getGlobalProperties().add(p);
                     p.setTransaction(transaction);
                 });
 
-                transactionDTO.getLocalProperties().forEach(localProp -> {
+                transactionDto.getLocalProperties().forEach(localProp -> {
                     Property p = Converter.convertDtoToEntity(localProp);
                     transaction.getLocalProperties().add(p);
                     p.setTransaction(transaction);
@@ -119,26 +121,39 @@ public class JtaServiceImpl implements JtaService {
                 entry.getTransactions().add(transaction);
                 transaction.setJta(entry);
 
-                //TODO: develop the "servers" part
-                transactionDTO.getServers().forEach(serverDTO -> {
-                    Optional<Server> server = extractServerFromDto(serverDTO);
-                    if(server.isPresent()) {
-                        transaction.addServer(server.get(), serverDTO.isSyncRegistered(), serverDTO.getState());
+                transactionDto.getServers().forEach(serverDto -> {
+                    Server server = extractServerFromDto(serverDto);
+//                    if(server.isPresent()) {
+                    transaction.addServer(server, serverDto.isSyncRegistered(), serverDto.getState());
+//                    }
+                });
+
+                transactionDto.getResources().forEach(resourceDto -> {
+                    Map<String, Server> serverMap = new HashMap<>();
+                    Resource resource = new Resource();
+                    resource.setName(resourceDto.getName());
+                    resource.setBusy(resourceDto.isBusy());
+                    resource.setState(resourceDto.getState());
+                    resource.setXid(resourceDto.getXid());
+
+                    for(ServerDto serverDto : resourceDto.getServers()) {
+                        Server server = serverMap.get(serverDto.getUrl());
+                        if(server == null) {
+                            server = extractServerFromDto(serverDto);
+                            serverMap.put(server.getUrl(), server);
+                        }
+                        resource.addServer(server);
                     }
+                    transaction.getResources().add(resource);
                 });
 
             });
-
-//            dto.getServers().forEach(serverDTO -> {
-//                Server server = extractServerFromDto(serverDTO);
-//                entry.getServers().add(server);
-//            });
 
         }
         return entry;
     }
 
-    private Optional<Server> extractServerFromDto(ServerDto serverDTO) {
+    private Server extractServerFromDto(ServerDto serverDTO) {
         String[] splittedUrl = serverDTO.getUrl().split("\\+");
         assert splittedUrl.length==4;
         String serverName = splittedUrl[0];
@@ -152,9 +167,9 @@ public class JtaServiceImpl implements JtaService {
             toCreate.setUrl(url);
             toCreate.setDomain(domain);
             toCreate.setConnection(connection);
-            optionalServer = Optional.of(serverRepository.save(toCreate));
+            return serverRepository.save(toCreate);
         }
-        return optionalServer;
+        return optionalServer.get();
     }
 
 

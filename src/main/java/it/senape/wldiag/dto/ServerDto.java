@@ -1,7 +1,5 @@
 package it.senape.wldiag.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.io.Serializable;
 
@@ -43,7 +41,7 @@ public class ServerDto implements Serializable {
 
     @Override
     public String toString() {
-        return "Server{" +
+        return "ServerDto{" +
                 "url='" + url + '\'' +
                 ", syncRegistered=" + syncRegistered +
                 ", state='" + state + '\'' +

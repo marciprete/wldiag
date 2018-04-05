@@ -3,10 +3,9 @@ package it.senape.wldiag.jpa.model.jta;
 import it.senape.wldiag.jpa.model.AbstractEntity;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by michele.arciprete on 14-Dec-17.
@@ -24,6 +23,14 @@ public class Resource extends AbstractEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
+
+    @OneToMany(
+            mappedBy = "resource",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<ResourceServer> servers = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -63,6 +70,19 @@ public class Resource extends AbstractEntity<Long> {
 
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
+    }
+
+    public List<ResourceServer> getServers() {
+        return servers;
+    }
+
+    public void setServers(List<ResourceServer> servers) {
+        this.servers = servers;
+    }
+
+    public void addServer(Server server) {
+        ResourceServer resourceServer = new ResourceServer(this, server);
+        servers.add(resourceServer);
     }
 
     @Override
