@@ -11,14 +11,17 @@ import javax.persistence.*;
 public class ExecutionDetails extends AbstractEntity<Long> {
 
     private String ECID;
+    private Long threadId;
 
     @OneToOne(fetch = FetchType.LAZY,
-    cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "work_id")
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        mappedBy = "executionDetails")
     private Work work;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY,
+        cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "thread_dump_id")
     private ThreadDump threadDump;
 
     public String getECID() {
@@ -43,6 +46,14 @@ public class ExecutionDetails extends AbstractEntity<Long> {
 
     public void setThreadDump(ThreadDump threadDump) {
         this.threadDump = threadDump;
+    }
+
+    public Long getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(Long threadId) {
+        this.threadId = threadId;
     }
 
     @Override

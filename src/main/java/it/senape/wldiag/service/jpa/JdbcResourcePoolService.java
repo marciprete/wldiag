@@ -45,7 +45,9 @@ public class JdbcResourcePoolService {
 
     private JdbcResourcePool convertDtoToEntity(JdbcResourcePoolDto jdbcResourcePoolDto) {
         JdbcResourcePool jdbcResourcePool = new JdbcResourcePool();
-        BeanUtils.copyProperties(jdbcResourcePoolDto, jdbcResourcePool);
+        jdbcResourcePool.setCurrentCapacity(jdbcResourcePoolDto.getCurrentCapacity());
+        jdbcResourcePool.setPoolname(jdbcResourcePoolDto.getPoolname());
+
         DiagnosticImage diagnosticImage = new DiagnosticImage();
         diagnosticImage.setId(jdbcResourcePoolDto.getDiagnosticImageId());
         jdbcResourcePool.setDiagnosticImage(diagnosticImage);

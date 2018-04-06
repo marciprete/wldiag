@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
@@ -65,7 +67,7 @@ public class DiagnosticImageXmlService {
                         JtaDto jtaDto = jtaXmlService.extract(dest);
                         diagnosticImageDto.setJtaDto(jtaDto);
                     } else if ("JDBC.txt".equalsIgnoreCase(entry.getName())) {
-                        JdbcResourcePoolDto resourcePoolDto = jdbcXmlService.extract(new BufferedReader(new InputStreamReader(zipIn)));
+                        JdbcResourcePoolDto resourcePoolDto = jdbcXmlService.extract(dest);
                         diagnosticImageDto.setJdbcResourcePool(resourcePoolDto);
                     } else if ("WORK_MANAGER.txt".equalsIgnoreCase(entry.getName())) {
                         WorkManagerDto workManagerDto = workManagerService.extract(dest);

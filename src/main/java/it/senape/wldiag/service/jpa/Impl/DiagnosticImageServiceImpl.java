@@ -90,16 +90,16 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
                 jtaDto.setDiagnosticImageId(diagnosticImageId);
                 jtaService.save(jtaDto);
 
-                JdbcResourcePoolDto jdbcResourcePool = diagnosticImageDto.getJdbcResourcePool();
-                jdbcResourcePool.setDiagnosticImageId(diagnosticImageId);
-                jdbcResourcePoolService.save(jdbcResourcePool);
+                JdbcResourcePoolDto jdbcResourcePoolDto = diagnosticImageDto.getJdbcResourcePool();
+                jdbcResourcePoolDto.setDiagnosticImageId(diagnosticImageId);
+                jdbcResourcePoolService.save(jdbcResourcePoolDto);
 
                 WorkManagerDto workManagerDto = diagnosticImageDto.getWorkManagerDto();
                 workManagerDto.setDiagnosticImageId(diagnosticImageId);
                 workManagerService.save(workManagerDto);
 
                 JvmDto jvmDto = diagnosticImageDto.getJvmDto();
-//                jvmDto
+                jvmDto.setDiagnosticImageId(diagnosticImageId);
                 jvmService.save(jvmDto);
 
                 return true;

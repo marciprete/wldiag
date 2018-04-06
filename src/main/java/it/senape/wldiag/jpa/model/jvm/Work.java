@@ -2,7 +2,7 @@ package it.senape.wldiag.jpa.model.jvm;
 
 import it.senape.wldiag.jpa.model.AbstractEntity;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
  * Created by michele.arciprete on 05-Apr-18
@@ -16,6 +16,11 @@ public class Work extends AbstractEntity<Long> {
     private Boolean scheduled;
     private Boolean started;
     private Long startedTimeMillis;
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "execution_details_id")
+    private ExecutionDetails executionDetails;
 
     public Work(){}
 
@@ -69,6 +74,14 @@ public class Work extends AbstractEntity<Long> {
 
     public void setStartedTimeMillis(Long startedTimeMillis) {
         this.startedTimeMillis = startedTimeMillis;
+    }
+
+    public ExecutionDetails getExecutionDetails() {
+        return executionDetails;
+    }
+
+    public void setExecutionDetails(ExecutionDetails executionDetails) {
+        this.executionDetails = executionDetails;
     }
 
     @Override

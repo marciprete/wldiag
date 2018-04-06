@@ -14,11 +14,15 @@ public class ThreadDump extends AbstractEntity<Long> {
     private Long threadId;
     private String threadName;
     private String state;
+
+    @Column(columnDefinition = "TEXT")
     private String stackTrace;
     private String extraInfo;
 
-    @OneToOne(mappedBy = "threadDump", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "threadDump")
     private ExecutionDetails executionDetails;
 
     @OneToOne(fetch = FetchType.LAZY)

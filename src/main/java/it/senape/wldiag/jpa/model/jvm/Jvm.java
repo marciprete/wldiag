@@ -33,18 +33,18 @@ public class Jvm extends AbstractEntity<Long> {
     private Boolean currentThreadCpuTimeSupported; //true
     private Boolean threadCpuTimeEnabled; //true
     private String runningJvmName; //27959
-    private Integer managementSpecVersion; //1
+    private String managementSpecVersion; //1.2
     private String vmName; //Java
     private String vmVendor; //Oracle
-    private Integer vmVersion; //25
+    private String vmVersion; //25
     private String specName; //Java
     private String specVendor; //Oracle
-    private Integer specVersion; //1
+    private String specVersion; //1
     private Long uptime; //1750911
     private Long startTime; //1513169886152
     private Boolean bootClassPathSupported; //true
     private String osName; //Linux
-    private Integer osVersion; //2
+    private String osVersion; //2
     private String osArch; //amd64
     private Integer osAvailableProcessors; //8
     private Long loadedClassCount; //45697
@@ -58,7 +58,8 @@ public class Jvm extends AbstractEntity<Long> {
     )
     private List<ThreadDump> threadDumpList = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "diagnostic_image_id")
     private DiagnosticImage diagnosticImage;
 
@@ -223,11 +224,11 @@ public class Jvm extends AbstractEntity<Long> {
         this.runningJvmName = runningJvmName;
     }
 
-    public Integer getManagementSpecVersion() {
+    public String getManagementSpecVersion() {
         return managementSpecVersion;
     }
 
-    public void setManagementSpecVersion(Integer managementSpecVersion) {
+    public void setManagementSpecVersion(String managementSpecVersion) {
         this.managementSpecVersion = managementSpecVersion;
     }
 
@@ -247,11 +248,11 @@ public class Jvm extends AbstractEntity<Long> {
         this.vmVendor = vmVendor;
     }
 
-    public Integer getVmVersion() {
+    public String getVmVersion() {
         return vmVersion;
     }
 
-    public void setVmVersion(Integer vmVersion) {
+    public void setVmVersion(String vmVersion) {
         this.vmVersion = vmVersion;
     }
 
@@ -271,11 +272,11 @@ public class Jvm extends AbstractEntity<Long> {
         this.specVendor = specVendor;
     }
 
-    public Integer getSpecVersion() {
+    public String getSpecVersion() {
         return specVersion;
     }
 
-    public void setSpecVersion(Integer specVersion) {
+    public void setSpecVersion(String specVersion) {
         this.specVersion = specVersion;
     }
 
@@ -311,11 +312,11 @@ public class Jvm extends AbstractEntity<Long> {
         this.osName = osName;
     }
 
-    public Integer getOsVersion() {
+    public String getOsVersion() {
         return osVersion;
     }
 
-    public void setOsVersion(Integer osVersion) {
+    public void setOsVersion(String osVersion) {
         this.osVersion = osVersion;
     }
 

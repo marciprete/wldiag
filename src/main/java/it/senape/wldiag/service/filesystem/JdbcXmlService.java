@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
@@ -34,9 +35,10 @@ public class JdbcXmlService {
     private static final String JAVA_LANG_EXCEPTION_STRING = "java.lang.Exception";
     private static final String TAB_REGEXP = "\t";
 
-    public JdbcResourcePoolDto extract(BufferedReader br) {
+    public JdbcResourcePoolDto extract(ByteArrayOutputStream outputStream) {
         JdbcResourcePoolDto resourcePoolDto = new JdbcResourcePoolDto();
-        try {
+        try (BufferedReader br = new BufferedReader(new StringReader(new String(outputStream.toByteArray())))) {
+
             String prev = "",
                     next = "";
 

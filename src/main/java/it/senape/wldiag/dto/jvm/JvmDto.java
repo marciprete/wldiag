@@ -10,7 +10,6 @@ import java.io.Serializable;
 @XmlRootElement(name = "jvm-runtime")
 public class JvmDto implements Serializable {
 
-
     private Integer objectPendingFinalizationCount; //0
 
     private Long heapMemoryUsedBytes; //2396672856
@@ -87,6 +86,9 @@ public class JvmDto implements Serializable {
 
     private String threadDump;
     private String threadRequestExecutionDetails; //Thread
+
+    private Long diagnosticImageId;
+
 
     public Integer getObjectPendingFinalizationCount() {
         return objectPendingFinalizationCount;
@@ -461,6 +463,13 @@ public class JvmDto implements Serializable {
         this.threadRequestExecutionDetails = threadRequestExecutionDetails;
     }
 
+    public Long getDiagnosticImageId() {
+        return diagnosticImageId;
+    }
+
+    public void setDiagnosticImageId(Long diagnosticImageId) {
+        this.diagnosticImageId = diagnosticImageId;
+    }
 
     @Override
     public String toString() {

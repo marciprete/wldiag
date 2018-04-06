@@ -1,10 +1,13 @@
 package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.dto.jvm.JvmDto;
+import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
+import it.senape.wldiag.jpa.model.jta.InternalThread;
 import it.senape.wldiag.jpa.model.jvm.ExecutionDetails;
 import it.senape.wldiag.jpa.model.jvm.Jvm;
 import it.senape.wldiag.jpa.model.jvm.ThreadDump;
 import it.senape.wldiag.jpa.model.jvm.Work;
+import it.senape.wldiag.jpa.repository.InternalThreadRepository;
 import it.senape.wldiag.jpa.repository.JvmRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,22 +34,37 @@ public class JvmService {
     private final static Logger logger = LoggerFactory.getLogger(JvmService.class);
 
     private JvmRepository jvmRepository;
+    private InternalThreadRepository internalThreadRepository;
 
     @Autowired
-    public JvmService(JvmRepository jvmRepository) {
+    public JvmService(JvmRepository jvmRepository,
+                      InternalThreadRepository internalThreadRepository) {
         this.jvmRepository = jvmRepository;
+        this.internalThreadRepository = internalThreadRepository;
     }
 
     public Boolean save(JvmDto jvmDto) {
         Jvm jvm = new Jvm();
+        DiagnosticImage diagnosticImage = new DiagnosticImage();
+        diagnosticImage.setId(jvmDto.getDiagnosticImageId());
+        jvm.setDiagnosticImage(diagnosticImage);
+
         BeanUtils.copyProperties(jvmDto,jvm);
 
         Map<String, ThreadDump> threadDumpMap = extractThreadDumps(jvmDto.getThreadDump());
         Map<String, ExecutionDetails> executionDetailsMap = extractExecutionDetails(jvmDto.getThreadRequestExecutionDetails());
+        Map<String, InternalThread> internalThreadMap = getInternalThreadMap(threadDumpMap.keySet());
 
         for (String threadName : threadDumpMap.keySet()) {
             ThreadDump threadDump = threadDumpMap.get(threadName);
             jvm.getThreadDumpList().add(threadDump);
+            threadDump.setJvm(jvm);
+
+            InternalThread internalThread = internalThreadMap.get(threadName);
+            if(internalThread != null) {
+                threadDump.setInternalThread(internalThread);
+            }
+
             ExecutionDetails executionDetails = executionDetailsMap.get(threadName);
             if(executionDetails != null) {
                 threadDump.setExecutionDetails(executionDetails);
@@ -53,6 +73,17 @@ public class JvmService {
         }
 
         return jvmRepository.save(jvm).getId() != null;
+    }
+
+    private Map<String,InternalThread> getInternalThreadMap(Set<String> threadNames) {
+        List<InternalThread> threadList = internalThreadRepository.findAllByNameIn(threadNames);
+        Map<String, InternalThread> internalThreadMap = new HashMap<>();
+        for (InternalThread internalThread : threadList) {
+            if (internalThreadMap.get(internalThread.getName())==null) {
+                internalThreadMap.put(internalThread.getName(), internalThread);
+            }
+        }
+        return internalThreadMap;
     }
 
 
@@ -69,12 +100,13 @@ public class JvmService {
                 if(line.startsWith("\"")) {
                     sb = new StringBuffer();
                     isThePreviousLineEmpty = false;
-                    Pattern pattern = Pattern.compile("^\"(.*)\"\\s\\w+=([0-9]+)\\s(.*)");
+//                    Pattern pattern = Pattern.compile("^\"(.*)\"\\s\\w+=([0-9]+)\\s(.*)");
+                    Pattern pattern = Pattern.compile("([\"])((?:(?!\\1).)+)\\1\\sId=([0-9]+)\\s(.*)");
                     Matcher matcher = pattern.matcher(line);
                     while (matcher.find()) {
-                        String name = matcher.group(1);
-                        String id = matcher.group(2);
-                        String state = matcher.group(3);
+                        String name = matcher.group(2);
+                        String id = matcher.group(3);
+                        String state = matcher.group(4);
                         td = new ThreadDump();
                         td.setThreadId(Long.parseLong(id));
                         td.setThreadName(name);
@@ -111,7 +143,7 @@ public class JvmService {
             String line;
             while((line=reader.readLine()) != null) {
                 if(line.startsWith("Thread")) {
-                    String threadName = line.substring(line.lastIndexOf("Thread name:"), line.indexOf(","));
+                    String threadName = line.substring(line.lastIndexOf("Thread name:")+12, line.indexOf(","));
                     line = line.substring(line.indexOf(",")+1);
 
                     String threadId = line.substring(line.indexOf("ThreadID:"), line.indexOf(",")).split(":")[1].trim();
@@ -123,11 +155,12 @@ public class JvmService {
                     String workString = line.substring(line.indexOf(":{")+2).trim();
 
                     ExecutionDetails executionDetails = new ExecutionDetails();
-                    executionDetails.setId(Long.parseLong(threadId));
+                    executionDetails.setThreadId(Long.parseLong(threadId));
                     executionDetails.setECID(ECID);
 
                     Work work = extractWorkFromString(workString);
                     executionDetails.setWork(work);
+                    work.setExecutionDetails(executionDetails);
 
                     executionDetailsMap.put(threadName, executionDetails);
                 }

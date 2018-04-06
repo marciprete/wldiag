@@ -3,6 +3,7 @@ package it.senape.wldiag.jpa.model.internal;
 import it.senape.wldiag.jpa.model.AbstractEntity;
 import it.senape.wldiag.jpa.model.jdbc.JdbcResourcePool;
 import it.senape.wldiag.jpa.model.jta.Jta;
+import it.senape.wldiag.jpa.model.jvm.Jvm;
 import it.senape.wldiag.jpa.model.workmanager.WorkManager;
 
 import javax.persistence.*;
@@ -42,6 +43,12 @@ public class DiagnosticImage extends AbstractEntity<Long> {
             orphanRemoval = true,
             mappedBy = "diagnosticImage")
     private WorkManager workManager;
+
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "diagnosticImage")
+    private Jvm jvm;
 
     public LocalDateTime getAcquisitionTime() {
         return acquisitionTime;
@@ -89,5 +96,21 @@ public class DiagnosticImage extends AbstractEntity<Long> {
 
     public void setJdbcResourcePool(JdbcResourcePool jdbcResourcePool) {
         this.jdbcResourcePool = jdbcResourcePool;
+    }
+
+    public WorkManager getWorkManager() {
+        return workManager;
+    }
+
+    public void setWorkManager(WorkManager workManager) {
+        this.workManager = workManager;
+    }
+
+    public Jvm getJvm() {
+        return jvm;
+    }
+
+    public void setJvm(Jvm jvm) {
+        this.jvm = jvm;
     }
 }

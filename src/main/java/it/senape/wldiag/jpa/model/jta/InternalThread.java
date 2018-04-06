@@ -1,6 +1,7 @@
 package it.senape.wldiag.jpa.model.jta;
 
 import it.senape.wldiag.jpa.model.AbstractEntity;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 public class InternalThread extends AbstractEntity<Long>  {
 
+    @NaturalId
     private String name;
     private Integer poolNumber;
     private String type;
