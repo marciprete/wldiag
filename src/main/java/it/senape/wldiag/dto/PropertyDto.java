@@ -1,6 +1,5 @@
 package it.senape.wldiag.dto;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.io.Serializable;
 

@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class JtaMessageMapper {
 
+    private JtaMessageMapper() {
+    }
+
     /**
      * Transforms the {@link Jta} object given as a method parameter into a
      * {@link JtaMessage} object and returns the created object.

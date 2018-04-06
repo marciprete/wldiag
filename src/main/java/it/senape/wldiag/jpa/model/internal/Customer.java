@@ -3,7 +3,6 @@ package it.senape.wldiag.jpa.model.internal;
 import it.senape.wldiag.jpa.model.AbstractEntity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**

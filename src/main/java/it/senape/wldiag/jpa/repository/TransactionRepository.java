@@ -27,6 +27,7 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
             + "left outer join fetch t.resources res "
             + "where jta.id = :jtaId"
     )
-    public List<Transaction> findCompleteTransactionFromJtaId(@Param("jtaId") Long jtaId);
+
+    List<Transaction> findCompleteTransactionFromJtaId(@Param("jtaId") Long jtaId);
 
 }

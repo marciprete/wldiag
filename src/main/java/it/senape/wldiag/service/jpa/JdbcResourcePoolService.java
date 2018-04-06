@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JdbcResourcePoolService {
 
-    private final static Logger log = LoggerFactory.getLogger(JdbcResourcePoolService.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcResourcePoolService.class);
 
     private JdbcResourcePoolRepository jdbcResourcePoolRepository;
 
@@ -33,7 +33,7 @@ public class JdbcResourcePoolService {
     }
 
     public Page<JdbcResourcePoolMessage> findAllWithCounters(Pageable pageRequest) {
-        log.debug("Page request: {}", pageRequest);
+        logger.debug("Page request: {}", pageRequest);
         Page<JdbcResourcePool> resourcePools = jdbcResourcePoolRepository.findAll(pageRequest);
         return ResourcePoolMessageMapper.mapEntityPageIntoDTOPage(pageRequest, resourcePools);
     }

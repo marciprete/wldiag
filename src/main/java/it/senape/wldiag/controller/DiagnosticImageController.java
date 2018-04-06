@@ -36,15 +36,15 @@ import java.util.regex.Pattern;
 @CrossOrigin("http://localhost:4200")
 public class DiagnosticImageController {
 
-    private static final Logger log = LoggerFactory.getLogger(DiagnosticImageController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DiagnosticImageController.class);
 
     public static final String SAVE_SUCCESSFUL = "Save successful";
     public static final String SAVE_FAILED = "Save failed";
     public static final String UPLOAD_FAILED_FILENAME_NOT_VALID = "Upload failed - Filename not valid";
 
-    StorageService storageService;
-    DiagnosticImageService diagnosticImageService;
-    DiagnosticImageXmlService diagnosticImageXmlService;
+    private StorageService storageService;
+    private DiagnosticImageService diagnosticImageService;
+    private DiagnosticImageXmlService diagnosticImageXmlService;
 
     @Autowired
     public DiagnosticImageController(StorageService storageService,
@@ -60,17 +60,19 @@ public class DiagnosticImageController {
     @ResponseBody
     @RequestMapping(value = UrlMappings.SHOW + "/{id}", method = RequestMethod.GET)
     public ResponseEntity<DiagnosticImageDto> show(@PathVariable("id") Long id) {
+        logger.trace(">> Show diagnostic image with id: {}", id);
         DiagnosticImageDto dto = diagnosticImageService.findById(id);
         if (dto != null && dto.getFileName()!=null) {
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }
+        logger.trace("<< Show diagnostic image");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @ResponseBody
     @RequestMapping(value = UrlMappings.LIST, method = RequestMethod.GET)
     public Page<DiagnosticImageDto> list(Pageable pageRequest) {
-        log.debug("Listing diangostic images");
+        logger.trace("Listing diangostic images");
         return diagnosticImageService.findLatest(pageRequest);
     }
 
@@ -79,7 +81,7 @@ public class DiagnosticImageController {
     public ResponseEntity<Map<String, String>> upload(@RequestParam("diagnosticImage") List<MultipartFile> files,
                          @RequestParam("customerId") Long customerId,
                          RedirectAttributes redirectAttributes) {
-
+        logger.trace("Upload {} file(s) for customer with id {}", files.size(), customerId);
         Map<String, String> results = new LinkedHashMap<>();
 
         if(files.isEmpty()) {
@@ -121,17 +123,17 @@ public class DiagnosticImageController {
                     DiagnosticImageDto dto = diagnosticImageXmlService.extract(resource);
                     dto.setCustomerId(customerId);
                     if(diagnosticImageService.save(dto)) {
-                        log.info(SAVE_SUCCESSFUL);
+                        logger.info(SAVE_SUCCESSFUL);
                         results.put(fileName, SAVE_SUCCESSFUL);
                     } else {
                         results.put(fileName, SAVE_FAILED);
                     }
                 } catch (StorageException se) {
-                    log.error("Problem saving file", se);
+                    logger.error("Problem saving file", se);
                     results.put(fileName, se.getMessage());
                 }
             } else {
-                log.error("File name not valid");
+                logger.error("File name not valid");
                 results.put(fileName, UPLOAD_FAILED_FILENAME_NOT_VALID);
             }
         });

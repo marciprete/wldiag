@@ -23,7 +23,7 @@ import java.util.zip.ZipInputStream;
 @Service
 public class DiagnosticImageXmlService {
 
-    private final Logger log = LoggerFactory.getLogger(DiagnosticImageXmlService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DiagnosticImageXmlService.class);
 
 
     private JtaXmlService jtaXmlService;
@@ -83,7 +83,7 @@ public class DiagnosticImageXmlService {
                     }
                 }
             } catch (IOException e) {
-                log.error("IO Exception reading file", e);
+                logger.error("IO Exception reading file", e);
                 diagnosticImageDto = null;
             }
         }

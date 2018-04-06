@@ -9,6 +9,8 @@ import java.io.InputStream;
  */
 public class Util {
 
+    private Util() {}
+
     public static ByteArrayOutputStream getFileAsByteArrayOS(InputStream is) throws IOException {
         final int BUFFER = 4096;
         int count;

@@ -22,6 +22,9 @@ import java.util.List;
  */
 public final class TransactionMessageMapper {
 
+    private TransactionMessageMapper() {
+    }
+
     /**
      * Transforms the list of {@link Transaction} objects given as a method parameter
      * into a list of {@link TransactionsMessage} objects and returns the created list.
@@ -55,7 +58,7 @@ public final class TransactionMessageMapper {
 
         InternalThreadDto activeThread = new InternalThreadDto();
         InternalThread internalThread = entity.getActiveThread();
-        if (internalThread!=null) {
+        if (internalThread != null) {
             activeThread.setId(internalThread.getId());
             activeThread.setName(internalThread.getName());
             activeThread.setPoolNumber(internalThread.getPoolNumber());
@@ -69,8 +72,8 @@ public final class TransactionMessageMapper {
         dto.setRepliesOwedOthers(entity.getRepliesOwedOthers());
         dto.setRetry(entity.isRetry());
 
-        if(!entity.getLocalProperties().isEmpty()) {
-            entity.getLocalProperties().forEach( prop -> {
+        if (!entity.getLocalProperties().isEmpty()) {
+            entity.getLocalProperties().forEach(prop -> {
 
                 PropertyDto propertyDTO = new PropertyDto();
                 propertyDTO.setName(prop.getName());
@@ -89,8 +92,8 @@ public final class TransactionMessageMapper {
             });
         }
 
-        if(!entity.getGlobalProperties().isEmpty()) {
-            entity.getGlobalProperties().forEach( prop -> {
+        if (!entity.getGlobalProperties().isEmpty()) {
+            entity.getGlobalProperties().forEach(prop -> {
                 PropertyDto propertyDTO = new PropertyDto();
                 propertyDTO.setName(prop.getName());
                 propertyDTO.setValue(prop.getValue());
@@ -99,7 +102,7 @@ public final class TransactionMessageMapper {
         }
 
         if (!entity.getResources().isEmpty()) {
-            entity.getResources().forEach( resource -> {
+            entity.getResources().forEach(resource -> {
                 ResourceDto resourceDTO = new ResourceDto();
                 resourceDTO.setBusy(resource.isBusy());
                 resourceDTO.setName(resource.getName());

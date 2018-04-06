@@ -1,6 +1,5 @@
 package it.senape.wldiag.dto;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**

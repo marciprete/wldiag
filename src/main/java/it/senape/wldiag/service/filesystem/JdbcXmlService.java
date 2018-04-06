@@ -20,7 +20,7 @@ import java.util.Properties;
 @Service
 public class JdbcXmlService {
 
-    private static final Logger log = LoggerFactory.getLogger(JdbcXmlService.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcXmlService.class);
 
     private static final String FIRST_ROW_TEXT = "Dumping Resource Pool:";
     private static final String CURRENT_CAPACITY = "Current Capacity";
@@ -52,14 +52,14 @@ public class JdbcXmlService {
                 if("".equals(prev) &&
                        !next.startsWith(FIRST_ROW_TEXT) ) {
                     //the file isn't a valid/recognized diagnostic image jdbc
-                    log.warn("Could not recognize JDBC File. First row \"{}\" differs from expected", next);
+                    logger.warn("Could not recognize JDBC File. First row \"{}\" differs from expected", next);
                     return resourcePoolDto;
                 }
 
                 if("".equals(prev)) {
-                    log.debug("Parsing begins.");
+                    logger.debug("Parsing begins.");
                     datasourceName = next.split(":")[1];
-                    log.info("Datasource name: {}", datasourceName);
+                    logger.info("Datasource name: {}", datasourceName);
                     dumpPoolString = "Resource Pool:"+datasourceName+":dumpPool";
                     prev = next;
 
@@ -70,14 +70,14 @@ public class JdbcXmlService {
                         if(prev.startsWith(JdbcXmlService.FIRST_ROW_TEXT)) {
                             prev = CURRENT_CAPACITY;
                             currentCapacity = Integer.parseInt(next.split(EQUAL_AND_SPACES_SEPARATOR_REGEXP)[1]);
-                            log.debug("Current capacity: {}", currentCapacity);
+                            logger.debug("Current capacity: {}", currentCapacity);
                             resourcePoolDto.setCurrentCapacity(currentCapacity);
                         }
 
                         else if (prev.equals(CURRENT_CAPACITY)) {
                             prev = AVAILABLE_RESOURCES;
                             availableResourcesCounter = Integer.parseInt(next.split(EQUAL_AND_SPACES_SEPARATOR_REGEXP)[1]);
-                            log.info("Available resources: {}", availableResourcesCounter);
+                            logger.info("Available resources: {}", availableResourcesCounter);
                         }
 
                         else if (prev.equals(AVAILABLE_RESOURCES)) {
@@ -94,7 +94,7 @@ public class JdbcXmlService {
                             if(next.contains(RESERVED_RESOURCES)) {
                                 prev = RESERVED_RESOURCES;
                                 reservedResourcesCounter = Integer.parseInt(next.split(EQUAL_AND_SPACES_SEPARATOR_REGEXP)[1]);
-                                log.info("Reserved counter: {}", reservedResourcesCounter);
+                                logger.info("Reserved counter: {}", reservedResourcesCounter);
                             } else {
                                 JdbcResourceDto availableResource = parseResource(next);
                                 if(JAVA_LANG_EXCEPTION_STRING.equals(availableResource.getCurrentUser())) {
@@ -117,7 +117,7 @@ public class JdbcXmlService {
                             if(next.contains(DEAD_RESOURCES)) {
                                 prev = DEAD_RESOURCES;
                                 deadResourcesCounter = Integer.parseInt(next.split(EQUAL_AND_SPACES_SEPARATOR_REGEXP)[1]);
-                                log.info("Dead counter: {}", deadResourcesCounter);
+                                logger.info("Dead counter: {}", deadResourcesCounter);
                             } else {
                                 JdbcResourceDto reservedResource = parseResource(next);
                                 if(JAVA_LANG_EXCEPTION_STRING.equals(reservedResource.getCurrentUser())) {
@@ -133,12 +133,13 @@ public class JdbcXmlService {
                     }
 
                     else {
+                        logger.warn("Exception continued...");
                         //exception continue...
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("IOException extranting file", e);
         }
 
         return resourcePoolDto;
@@ -175,23 +176,20 @@ public class JdbcXmlService {
         JdbcResourceDto jdbcResource = new JdbcResourceDto();
         try {
             Properties p = buildProperties(properties, ",");
-            JdbcResourceDto finalJdbcResource = jdbcResource;
             p.forEach((k, v) -> {
                 try {
-                    BeanUtils.setProperty(finalJdbcResource,k.toString(),v);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    BeanUtils.setProperty(jdbcResource,k.toString(),v);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Exception setting jdbcResource", e);
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed building properties {}", properties, e);
         }
         return jdbcResource;
     }
 
-    public Properties buildProperties(String propertiesFromString, String entrySeparator) throws IOException {
+    private Properties buildProperties(String propertiesFromString, String entrySeparator) throws IOException {
         Properties properties = new Properties();
         properties.load(new StringReader(propertiesFromString.replaceAll(entrySeparator, "\n")));
         return properties;

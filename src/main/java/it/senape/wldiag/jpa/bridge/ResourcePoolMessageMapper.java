@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class ResourcePoolMessageMapper {
 
+    private ResourcePoolMessageMapper() {
+    }
+
     /**
      * Transforms the {@link JdbcResourcePool} object given as a method parameter into a
      * {@link JdbcResourcePoolMessage} object and returns the created object.

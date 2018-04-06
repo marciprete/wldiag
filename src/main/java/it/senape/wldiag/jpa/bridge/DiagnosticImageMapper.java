@@ -2,7 +2,6 @@ package it.senape.wldiag.jpa.bridge;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
-import it.senape.wldiag.jpa.model.jta.Server;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,8 @@ import java.util.List;
  * Created by michele.arciprete on 18-Dec-17.
  */
 public final class DiagnosticImageMapper {
+
+    private DiagnosticImageMapper() {}
 
     /**
      * Transforms the list of {@link DiagnosticImage} objects given as a method parameter

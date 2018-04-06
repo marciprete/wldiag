@@ -56,7 +56,6 @@ public class CustomerServiceImpl implements CustomerService {
         if(customer.isPresent()) {
             dto = CustomerMapper.mapEntityIntoDTO(customer.get());
         }
-        Optional<CustomerDto> customerDto = Optional.of(dto);
-        return customerDto;
+        return Optional.of(dto);
     }
 }

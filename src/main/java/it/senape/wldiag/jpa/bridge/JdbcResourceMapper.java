@@ -14,6 +14,9 @@ import java.util.List;
  * Created by michele.arciprete on 28-Jan-18.
  */
 public class JdbcResourceMapper {
+    private JdbcResourceMapper() {
+    }
+
     /**
      * Transforms the {@link JdbcResource} object given as a method parameter into a
      * {@link JdbcResourceMessage} object and returns the created object.

@@ -79,4 +79,27 @@ public class ResourceServer implements Serializable {
         this.id = new ResourceServerPK(resource.getId(), server.getId());
     }
 
+    public ResourceServerPK getId() {
+        return id;
+    }
+
+    public void setId(ResourceServerPK id) {
+        this.id = id;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
 }

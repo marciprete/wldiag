@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class CustomerMapper {
 
+    private CustomerMapper() {}
+
     /**
      * Transforms the {@link Customer} object given as a method parameter into a
      * {@link CustomerDto} object and returns the created object.

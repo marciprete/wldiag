@@ -1,5 +1,7 @@
 package it.senape.wldiag.jpa.model.jta;
 
+import it.senape.wldiag.jpa.model.AbstractEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -7,10 +9,7 @@ import java.io.Serializable;
  * Created by michele.arciprete on 14-Dec-17.
  */
 @Entity
-public class XAResource implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class XAResource extends AbstractEntity<Long>  {
 
     private String name;//="EBOOKING_DATASOURCE_ebooking"
     private String enlistmentType;//="dynamic"
@@ -23,14 +22,6 @@ public class XAResource implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jta_id")
     private Jta jta;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -115,7 +106,7 @@ public class XAResource implements Serializable {
     @Override
     public String toString() {
         return "XAResource{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", enlistmentType='" + enlistmentType + '\'' +
                 ", registered=" + registered +

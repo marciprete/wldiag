@@ -16,6 +16,9 @@ import java.util.List;
  */
 public class JtaMapper {
 
+    private JtaMapper() {
+    }
+
     /**
      * Transforms the {@link Jta} object given as a method parameter into a
      * {@link JtaDto} object and returns the created object.

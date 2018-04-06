@@ -176,8 +176,6 @@ public class JtaServiceImpl implements JtaService {
 
     public void delete(Long id) {
         Optional<Jta> jta = jtaRepository.findById(id);
-        if(jta.isPresent()) {
-            jtaRepository.delete(jta.get());
-        }
+        jta.ifPresent(entity -> jtaRepository.delete(entity));
     }
 }

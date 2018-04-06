@@ -1,7 +1,5 @@
 package it.senape.wldiag.message;
 
-import it.senape.wldiag.jpa.model.jta.InternalThread;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

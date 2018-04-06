@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
  */
 public class Converter {
 
+    private Converter(){}
+
     public static Property convertDtoToEntity(PropertyDto dto) {
         Property p = null;
         switch (dto.getName()) {

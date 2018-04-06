@@ -32,10 +32,9 @@ import java.util.Optional;
 @Transactional
 public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
-    Logger log = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
 
 
-    private StorageService storageService;
     private CustomerRepository customerRepository;
     private DiagnosticImageRepository diagnosticImageRepository;
     private JtaService jtaService;
@@ -45,7 +44,6 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
     @Autowired
     public DiagnosticImageServiceImpl(
-            StorageService storageService,
             DiagnosticImageRepository diagnosticImageRepository,
             CustomerRepository customerRepository,
             JtaService jtaService,
@@ -54,7 +52,6 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
             JvmService jvmService
     ) {
 
-        this.storageService = storageService;
         this.diagnosticImageRepository = diagnosticImageRepository;
         this.customerRepository = customerRepository;
         this.jtaService = jtaService;
@@ -111,7 +108,7 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
             }
 
         }
-        log.error("Customer not found with id {}", diagnosticImageDto.getCustomerId());
+        logger.error("Customer not found with id {}", diagnosticImageDto.getCustomerId());
         return false;
     }
 
@@ -136,7 +133,7 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     @Override
     @Transactional(readOnly = true)
     public Page<DiagnosticImageDto> findLatest(Pageable pageRequest) {
-        log.info("Find latest DIs");
+        logger.trace("Find latest DIs");
 //        if (pageRequest.getSort() == null) {
 //            pageRequest = new PageRequest(pageRequest.getOffset(),
 //                    pageRequest.getPageSize(),
@@ -144,9 +141,8 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 //                    "acquisitionTime");
 //        }
         Page<DiagnosticImage> resultsPage = diagnosticImageRepository.findAll(pageRequest);
-        log.info("Found {} diagnostic images", resultsPage.getTotalElements());
-        Page<DiagnosticImageDto> results = DiagnosticImageMapper.mapEntityPageIntoDTOPage(pageRequest, resultsPage);
-        return results;
+        logger.debug("Found {} diagnostic images", resultsPage.getTotalElements());
+        return DiagnosticImageMapper.mapEntityPageIntoDTOPage(pageRequest, resultsPage);
     }
 
     @Override

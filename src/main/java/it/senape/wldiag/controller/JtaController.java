@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = UrlMappings.API_JTA)
 public class JtaController {
 
-    private final static Logger log = LoggerFactory.getLogger(JtaController.class);
+    private final static Logger logger = LoggerFactory.getLogger(JtaController.class);
 
     private JtaService jtaService;
 
@@ -34,7 +34,7 @@ public class JtaController {
     @ResponseBody
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public Page<JtaMessage> list(Pageable pageRequest) {
-        log.info("Request JTA List");
+        logger.info("Request JTA List");
         return jtaService.findAll(pageRequest);
     }
 

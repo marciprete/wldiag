@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 @Service
 public class JvmService {
 
-    private final static Logger log = LoggerFactory.getLogger(JvmService.class);
+    private final static Logger logger = LoggerFactory.getLogger(JvmService.class);
 
     private JvmRepository jvmRepository;
 
@@ -64,7 +64,7 @@ public class JvmService {
             StringBuffer sb = new StringBuffer();
             Boolean isThePreviousLineEmpty = false;
 
-            ThreadDump td = null;
+            ThreadDump td = new ThreadDump();
             while((line = reader.readLine()) !=null ) {
                 if(line.startsWith("\"")) {
                     sb = new StringBuffer();
@@ -99,7 +99,7 @@ public class JvmService {
                 }
             }
         } catch (IOException e) {
-            log.error("Failed to extract thread dumps", e);
+            logger.error("Failed to extract thread dumps", e);
         }
         return threadDumpMap;
     }
@@ -133,7 +133,7 @@ public class JvmService {
                 }
             }
         } catch (IOException e) {
-            log.error("Failed to extract thread execution details", e);
+            logger.error("Failed to extract thread execution details", e);
         }
         return executionDetailsMap;
     }
