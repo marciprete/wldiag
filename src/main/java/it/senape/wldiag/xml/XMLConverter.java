@@ -42,15 +42,28 @@ public class XMLConverter {
     }
 
     public static JvmDto convertJvmInputStreamToObject(InputStream byteArrayInputStream) {
-        JvmDto jta = null;
+        JvmDto jvmDto = null;
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(JvmDto.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            jta = (JvmDto) jaxbUnmarshaller.unmarshal(byteArrayInputStream);
+            jvmDto = (JvmDto) jaxbUnmarshaller.unmarshal(byteArrayInputStream);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-        return jta;
+        return jvmDto;
+    }
+
+    public static JvmDto convertJvmFileToObject(String fileName) {
+        JvmDto jvmDto = null;
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(JvmDto.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            File file = new File(fileName);
+            jvmDto = (JvmDto) jaxbUnmarshaller.unmarshal(file);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return jvmDto;
     }
 
     public static DomainType convertDomainInputStreamToObject(ByteArrayInputStream byteArrayInputStream) {

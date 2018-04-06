@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.xml;
+package it.senape.wldiag.service.filesystem;
 
 import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.xml.XMLConverter;

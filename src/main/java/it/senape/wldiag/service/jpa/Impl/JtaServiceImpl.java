@@ -143,6 +143,7 @@ public class JtaServiceImpl implements JtaService {
                             serverMap.put(server.getUrl(), server);
                         }
                         resource.addServer(server);
+                        resource.setTransaction(transaction);
                     }
                     transaction.getResources().add(resource);
                 });

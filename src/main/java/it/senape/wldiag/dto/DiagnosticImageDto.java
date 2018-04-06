@@ -1,6 +1,8 @@
 package it.senape.wldiag.dto;
 
 import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
+import it.senape.wldiag.dto.jvm.JvmDto;
+import it.senape.wldiag.dto.workmanager.WorkManagerDto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +22,8 @@ public class DiagnosticImageDto implements Serializable {
 
     private JtaDto jtaDto;
     private JdbcResourcePoolDto jdbcResourcePool;
+    private WorkManagerDto workManagerDto;
+    private JvmDto jvmDto;
 
     public String getFileName() {
         return fileName;
@@ -75,6 +79,22 @@ public class DiagnosticImageDto implements Serializable {
 
     public void setJtaDto(JtaDto jtaDto) {
         this.jtaDto = jtaDto;
+    }
+
+    public WorkManagerDto getWorkManagerDto() {
+        return workManagerDto;
+    }
+
+    public void setWorkManagerDto(WorkManagerDto workManagerDto) {
+        this.workManagerDto = workManagerDto;
+    }
+
+    public JvmDto getJvmDto() {
+        return jvmDto;
+    }
+
+    public void setJvmDto(JvmDto jvmDto) {
+        this.jvmDto = jvmDto;
     }
 
     @Override

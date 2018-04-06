@@ -7,9 +7,7 @@ import it.senape.wldiag.fixtures.CustomerFixtures;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
-import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
-import it.senape.wldiag.service.jpa.JtaService;
-import it.senape.wldiag.service.jpa.StorageService;
+import it.senape.wldiag.service.jpa.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +31,8 @@ class DiagnosticImageServiceTest {
     private CustomerRepository customerRepository;
     private JtaService jtaService;
     private JdbcResourcePoolService jdbcResourcePoolService;
+    private WorkManagerService workManagerService;
+    private JvmService jvmService;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -41,12 +41,16 @@ class DiagnosticImageServiceTest {
         storageService = mock(StorageService.class);
         jtaService = mock(JtaService.class);
         jdbcResourcePoolService = mock(JdbcResourcePoolService.class);
+        workManagerService = mock(WorkManagerService.class);
+        jvmService = mock(JvmService.class);
 
         service = new DiagnosticImageServiceImpl(storageService,
                 diagnosticImageRepository,
                 customerRepository,
                 jtaService,
-                jdbcResourcePoolService);
+                jdbcResourcePoolService,
+                workManagerService,
+                jvmService);
     }
 
 //    @Nested

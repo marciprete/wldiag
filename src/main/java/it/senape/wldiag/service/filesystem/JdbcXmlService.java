@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.xml;
+package it.senape.wldiag.service.filesystem;
 
 import it.senape.wldiag.dto.jdbc.JdbcResourceDto;
 import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;

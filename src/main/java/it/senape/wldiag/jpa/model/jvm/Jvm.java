@@ -1,19 +1,17 @@
 package it.senape.wldiag.jpa.model.jvm;
 
+import it.senape.wldiag.jpa.model.AbstractEntity;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by michele.arciprete on 17-Jan-18.
  */
 @Entity
-public class Jvm implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Jvm extends AbstractEntity<Long> {
 
     private Integer objectPendingFinalizationCount; //0
     private Long heapMemoryUsedBytes; //2396672856
@@ -52,20 +50,18 @@ public class Jvm implements Serializable {
     private Long loadedClassCount; //45697
     private Long totalLoadedClassCount; //45697
     private Integer unloadedClassCount; //0
-    private String threadDump;
-    private String threadRequestExecutionDetails;
+
+    @OneToMany(mappedBy = "jvm",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<ThreadDump> threadDumpList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diagnostic_image_id")
     private DiagnosticImage diagnosticImage;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getObjectPendingFinalizationCount() {
         return objectPendingFinalizationCount;
@@ -363,27 +359,63 @@ public class Jvm implements Serializable {
         this.unloadedClassCount = unloadedClassCount;
     }
 
-    public String getThreadDump() {
-        return threadDump;
-    }
-
-    public void setThreadDump(String threadDump) {
-        this.threadDump = threadDump;
-    }
-
-    public String getThreadRequestExecutionDetails() {
-        return threadRequestExecutionDetails;
-    }
-
-    public void setThreadRequestExecutionDetails(String threadRequestExecutionDetails) {
-        this.threadRequestExecutionDetails = threadRequestExecutionDetails;
-    }
-
     public DiagnosticImage getDiagnosticImage() {
         return diagnosticImage;
     }
 
     public void setDiagnosticImage(DiagnosticImage diagnosticImage) {
         this.diagnosticImage = diagnosticImage;
+    }
+
+    public List<ThreadDump> getThreadDumpList() {
+        return threadDumpList;
+    }
+
+    public void setThreadDumpList(List<ThreadDump> threadDump) {
+        this.threadDumpList = threadDump;
+    }
+
+    @Override
+    public String toString() {
+        return "Jvm{" +
+                "objectPendingFinalizationCount=" + objectPendingFinalizationCount +
+                ", heapMemoryUsedBytes=" + heapMemoryUsedBytes +
+                ", heapMemoryMaxBytes=" + heapMemoryMaxBytes +
+                ", heapMemoryInitBytes=" + heapMemoryInitBytes +
+                ", heapMemoryCommittedBytes=" + heapMemoryCommittedBytes +
+                ", nonHeapMemoryUsedBytes=" + nonHeapMemoryUsedBytes +
+                ", nonHeapMemoryInitBytes=" + nonHeapMemoryInitBytes +
+                ", nonHeapMemoryCommittedBytes=" + nonHeapMemoryCommittedBytes +
+                ", threadCount=" + threadCount +
+                ", peakThreadCount=" + peakThreadCount +
+                ", totalStartedThreadCount=" + totalStartedThreadCount +
+                ", daemonThreadCount=" + daemonThreadCount +
+                ", threadContentionMonitoringSupported=" + threadContentionMonitoringSupported +
+                ", threadContentionMonitoringEnabled=" + threadContentionMonitoringEnabled +
+                ", currentThreadCpuTime=" + currentThreadCpuTime +
+                ", currentThreadUserTime=" + currentThreadUserTime +
+                ", threadCpuTimeSupported=" + threadCpuTimeSupported +
+                ", currentThreadCpuTimeSupported=" + currentThreadCpuTimeSupported +
+                ", threadCpuTimeEnabled=" + threadCpuTimeEnabled +
+                ", runningJvmName='" + runningJvmName + '\'' +
+                ", managementSpecVersion=" + managementSpecVersion +
+                ", vmName='" + vmName + '\'' +
+                ", vmVendor='" + vmVendor + '\'' +
+                ", vmVersion=" + vmVersion +
+                ", specName='" + specName + '\'' +
+                ", specVendor='" + specVendor + '\'' +
+                ", specVersion=" + specVersion +
+                ", uptime=" + uptime +
+                ", startTime=" + startTime +
+                ", bootClassPathSupported=" + bootClassPathSupported +
+                ", osName='" + osName + '\'' +
+                ", osVersion=" + osVersion +
+                ", osArch='" + osArch + '\'' +
+                ", osAvailableProcessors=" + osAvailableProcessors +
+                ", loadedClassCount=" + loadedClassCount +
+                ", totalLoadedClassCount=" + totalLoadedClassCount +
+                ", unloadedClassCount=" + unloadedClassCount +
+                ", threadDumpList=" + threadDumpList +
+                '}';
     }
 }

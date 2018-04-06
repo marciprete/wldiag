@@ -3,21 +3,21 @@ package it.senape.wldiag.service.jpa.Impl;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
+import it.senape.wldiag.dto.jvm.JvmDto;
+import it.senape.wldiag.dto.workmanager.WorkManagerDto;
 import it.senape.wldiag.jpa.bridge.DiagnosticImageMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
-import it.senape.wldiag.service.jpa.DiagnosticImageService;
-import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
-import it.senape.wldiag.service.jpa.JtaService;
-import it.senape.wldiag.service.jpa.StorageService;
+import it.senape.wldiag.service.jpa.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -35,11 +35,13 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     Logger log = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
 
 
-    StorageService storageService;
-    CustomerRepository customerRepository;
-    DiagnosticImageRepository diagnosticImageRepository;
-    JtaService jtaService;
-    JdbcResourcePoolService jdbcResourcePoolService;
+    private StorageService storageService;
+    private CustomerRepository customerRepository;
+    private DiagnosticImageRepository diagnosticImageRepository;
+    private JtaService jtaService;
+    private JdbcResourcePoolService jdbcResourcePoolService;
+    private WorkManagerService workManagerService;
+    private JvmService jvmService;
 
     @Autowired
     public DiagnosticImageServiceImpl(
@@ -47,7 +49,9 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
             DiagnosticImageRepository diagnosticImageRepository,
             CustomerRepository customerRepository,
             JtaService jtaService,
-            JdbcResourcePoolService jdbcResourcePoolService
+            JdbcResourcePoolService jdbcResourcePoolService,
+            WorkManagerService workManagerService,
+            JvmService jvmService
     ) {
 
         this.storageService = storageService;
@@ -55,17 +59,17 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
         this.customerRepository = customerRepository;
         this.jtaService = jtaService;
         this.jdbcResourcePoolService = jdbcResourcePoolService;
+        this.workManagerService = workManagerService;
+        this.jvmService = jvmService;
     }
 
 
     @Override
     @Transactional
-    public Boolean save(DiagnosticImageDto dto) throws TransactionException {
-        Boolean result = false;
-
-        Optional<Customer> customer = customerRepository.findById(dto.getCustomerId());
+    public Boolean save(DiagnosticImageDto diagnosticImageDto) throws TransactionException {
+        Optional<Customer> customer = customerRepository.findById(diagnosticImageDto.getCustomerId());
         if (customer.isPresent()) {
-            DiagnosticImage diagnosticImage = diagnosticImageRepository.findByFileNameAndCustomerId(dto.getFileName(), dto.getCustomerId());
+            DiagnosticImage diagnosticImage = diagnosticImageRepository.findByFileNameAndCustomerId(diagnosticImageDto.getFileName(), diagnosticImageDto.getCustomerId());
 
             //TODO: Returns false if the image already exists. Don't perform any update, yet.
             if (diagnosticImage != null) {
@@ -74,28 +78,41 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
             diagnosticImage = new DiagnosticImage();
             diagnosticImage.setCustomer(customer.get());
-            diagnosticImage.setAcquisitionTime(dto.getAcquisitionTime());
-            diagnosticImage.setServerName(dto.getServerName());
-            diagnosticImage.setFileName(dto.getFileName());
+            diagnosticImage.setAcquisitionTime(diagnosticImageDto.getAcquisitionTime());
+            diagnosticImage.setServerName(diagnosticImageDto.getServerName());
+            diagnosticImage.setFileName(diagnosticImageDto.getFileName());
 
             try {
                 diagnosticImage = diagnosticImageRepository.save(diagnosticImage);
-                JtaDto jtaDto = dto.getJtaDto();
-                jtaDto.setDiagnosticImageId(diagnosticImage.getId());
-                jtaService.save(jtaDto);
-                JdbcResourcePoolDto jdbcResourcePool = dto.getJdbcResourcePool();
-                jdbcResourcePool.setDiagnosticImageId(diagnosticImage.getId());
-                jdbcResourcePoolService.save(jdbcResourcePool);
-                if (diagnosticImage != null) {
-                    result = diagnosticImage.getId() != null;
+                Long diagnosticImageId = diagnosticImage.getId();
+                if(diagnosticImageId == null) {
+                    throw new CannotCreateTransactionException("Failed saving Diagnostic Image");
                 }
+
+                JtaDto jtaDto = diagnosticImageDto.getJtaDto();
+                jtaDto.setDiagnosticImageId(diagnosticImageId);
+                jtaService.save(jtaDto);
+
+                JdbcResourcePoolDto jdbcResourcePool = diagnosticImageDto.getJdbcResourcePool();
+                jdbcResourcePool.setDiagnosticImageId(diagnosticImageId);
+                jdbcResourcePoolService.save(jdbcResourcePool);
+
+                WorkManagerDto workManagerDto = diagnosticImageDto.getWorkManagerDto();
+                workManagerDto.setDiagnosticImageId(diagnosticImageId);
+                workManagerService.save(workManagerDto);
+
+                JvmDto jvmDto = diagnosticImageDto.getJvmDto();
+//                jvmDto
+                jvmService.save(jvmDto);
+
+                return true;
             } catch (TransactionException txe) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
 
         }
-        log.error("Customer not found with id {}", dto.getCustomerId());
-        return result;
+        log.error("Customer not found with id {}", diagnosticImageDto.getCustomerId());
+        return false;
     }
 
     @Override
