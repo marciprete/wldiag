@@ -9,12 +9,14 @@ import it.senape.wldiag.fixtures.CustomerFixtures;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
-import it.senape.wldiag.service.jpa.*;
+import it.senape.wldiag.service.jpa.JdbcResourcePoolService;
+import it.senape.wldiag.service.jpa.JtaService;
+import it.senape.wldiag.service.jpa.JvmService;
+import it.senape.wldiag.service.jpa.WorkManagerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.isA;
@@ -94,6 +96,7 @@ class DiagnosticImageServiceTest {
                     diagnosticImageDto.setJtaDto(new JtaDto());
                     diagnosticImageDto.setJdbcResourcePool(new JdbcResourcePoolDto());
                     diagnosticImageDto.setWorkManagerDto(new WorkManagerDto());
+                    diagnosticImageDto.setJvmDto(new JvmDto());
                     service.save(diagnosticImageDto);
 
 //                    verify(diagnosticImageRepository, times(1)).findByFileNameAndCustomerId(isA(String.class),

@@ -16,7 +16,6 @@ import java.util.List;
 @Entity
 public class InternalThread extends AbstractEntity<Long>  {
 
-    @NaturalId
     private String name;
     private Integer poolNumber;
     private String type;
