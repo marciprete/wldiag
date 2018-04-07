@@ -77,19 +77,19 @@ public class JdbcResource extends AbstractEntity<Long> {
         this.enabled = enabled;
     }
 
-    public Boolean getXA() {
+    public Boolean getIsXA() {
         return isXA;
     }
 
-    public void setXA(Boolean XA) {
+    public void setIsXA(Boolean XA) {
         isXA = XA;
     }
 
-    public Boolean getJTS() {
+    public Boolean getIsJTS() {
         return isJTS;
     }
 
-    public void setJTS(Boolean JTS) {
+    public void setIsJTS(Boolean JTS) {
         isJTS = JTS;
     }
 

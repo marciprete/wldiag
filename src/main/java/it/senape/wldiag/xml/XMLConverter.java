@@ -4,10 +4,8 @@ import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.dto.jvm.JvmDto;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 
@@ -66,15 +64,15 @@ public class XMLConverter {
         return jvmDto;
     }
 
-    public static DomainType convertDomainInputStreamToObject(ByteArrayInputStream byteArrayInputStream) {
-        DomainType domainType = null;
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(DomainType.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            domainType = ((JAXBElement<DomainType>) jaxbUnmarshaller.unmarshal(byteArrayInputStream)).getValue();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return domainType;
-    }
+//    public static DomainType convertDomainInputStreamToObject(ByteArrayInputStream byteArrayInputStream) {
+//        DomainType domainType = null;
+//        try {
+//            JAXBContext jaxbContext = JAXBContext.newInstance(DomainType.class);
+//            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//            domainType = ((JAXBElement<DomainType>) jaxbUnmarshaller.unmarshal(byteArrayInputStream)).getValue();
+//        } catch (JAXBException e) {
+//            e.printStackTrace();
+//        }
+//        return domainType;
+//    }
 }

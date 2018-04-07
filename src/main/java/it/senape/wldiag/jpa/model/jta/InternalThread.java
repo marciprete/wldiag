@@ -66,4 +66,12 @@ public class InternalThread extends AbstractEntity<Long>  {
         transaction.setActiveThread(null);
     }
 
+    @Override
+    public String toString() {
+        return "InternalThread{" +
+                "name='" + name + '\'' +
+                ", poolNumber=" + poolNumber +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

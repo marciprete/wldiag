@@ -147,40 +147,6 @@
             <artifactId>HikariCP</artifactId>
         </dependency>
 
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-jaxb-annotations &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.module</groupId>-->
-        <!--<artifactId>jackson-module-jaxb-annotations</artifactId>-->
-        <!--<version>${jackson}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-        <!--<artifactId>jackson-dataformat-yaml</artifactId>-->
-        <!--<version>${jackson}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-core</artifactId>-->
-        <!--<version>${jackson}</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-annotations</artifactId>-->
-        <!--<version>${jackson}</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-databind</artifactId>-->
-        <!--<version>${jackson}</version>-->
-        <!--</dependency>-->
-
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -250,13 +216,6 @@
             <scope>test</scope>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>com.nitorcreations</groupId>-->
-            <!--<artifactId>junit-runners</artifactId>-->
-            <!--<version>1.3</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.github.springtestdbunit</groupId>
             <artifactId>spring-test-dbunit</artifactId>
@@ -312,6 +271,14 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>it/senape/wldiag/xml/*Type.*</exclude>
+                        <exclude>it/senape/wldiag/xml/ObjectFactory.*</exclude>
+                        <!--<exclude>it.senape.wldiag.xml/*Type.*</exclude>-->
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
@@ -326,6 +293,9 @@
                                 for JaCoCo runtime agent.
                             -->
                             <propertyName>surefireArgLine</propertyName>
+                            <!--<excludes>-->
+                                <!--<exclude>it/senape/wldiag/xml/*Type.*</exclude>-->
+                            <!--</excludes>-->
                         </configuration>
                     </execution>
                     <execution>
@@ -337,9 +307,12 @@
                         <configuration>
                             <!-- Sets the path to the file which contains the execution data. -->
                             <dataFile>${jacoco.execution.data.file}</dataFile>
-                            <append>true</append>
+                            <!--<append>true</append>-->
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                            <!--<excludes>-->
+                                <!--<exclude>it/senape/wldiag/xml/*Type.*</exclude>-->
+                            <!--</excludes>-->
                         </configuration>
                     </execution>
 
@@ -348,40 +321,46 @@
                     Prepares the property pointing to the JaCoCo runtime agent which
                     is passed as VM argument when Maven the Failsafe plugin is executed.
                     -->
-                    <execution>
-                        <id>pre-integration-test</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <destFile>${jacoco.execution.data.file}</destFile>
-                            <append>true</append>
-                            <!--
-                                Sets the name of the property containing the settings
-                                for JaCoCo runtime agent.
-                            -->
-                            <propertyName>failsafeArgLine</propertyName>
-                        </configuration>
-                    </execution>
-                    <!--
-                        Ensures that the code coverage report for integration tests after
-                        integration tests have been run.
-                    -->
-                    <execution>
-                        <id>post-integration-test</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>${jacoco.execution.data.file}</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                        </configuration>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>pre-integration-test</id>-->
+                        <!--<phase>pre-integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>prepare-agent</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--&lt;!&ndash; Sets the path to the file which contains the execution data. &ndash;&gt;-->
+                            <!--<destFile>${jacoco.execution.data.file}</destFile>-->
+                            <!--<append>true</append>-->
+                            <!--&lt;!&ndash;-->
+                                <!--Sets the name of the property containing the settings-->
+                                <!--for JaCoCo runtime agent.-->
+                            <!--&ndash;&gt;-->
+                            <!--<propertyName>failsafeArgLine</propertyName>-->
+                            <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<exclude>it/senape/wldiag/xml/*Type.*</exclude>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                    <!--&lt;!&ndash;-->
+                        <!--Ensures that the code coverage report for integration tests after-->
+                        <!--integration tests have been run.-->
+                    <!--&ndash;&gt;-->
+                    <!--<execution>-->
+                        <!--<id>post-integration-test</id>-->
+                        <!--<phase>post-integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>report</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--&lt;!&ndash; Sets the path to the file which contains the execution data. &ndash;&gt;-->
+                            <!--<dataFile>${jacoco.execution.data.file}</dataFile>-->
+                            <!--&lt;!&ndash; Sets the output directory for the code coverage report. &ndash;&gt;-->
+                            <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>-->
+                            <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<exclude>it/senape/wldiag/xml/*Type.*</exclude>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                 </executions>
             </plugin>
 

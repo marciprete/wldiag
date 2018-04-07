@@ -80,9 +80,7 @@ public class JtaServiceImpl implements JtaService {
             entry.setHlogStoreName(dto.getHlogStoreName());
             entry.setParallelXAEnabled(dto.isParallelXAEnabled());
             entry.setTwoPhaseEnabled(dto.isTwoPhaseEnabled());
-
             entry.setHealth(Health.valueOf(dto.getHealth().getHealthState().getState().toString()));
-
             entry.setTransactionCount(dto.getTransactions().size());
 
             DiagnosticImage diagnosticImage = new DiagnosticImage();
@@ -94,9 +92,10 @@ public class JtaServiceImpl implements JtaService {
                 transaction.setXid(transactionDto.getXid());
                 transaction.setState(transactionDto.getState());
                 transaction.setStatus(transactionDto.getStatus());
-                transaction.setBeginTime(Converter.fromLongToLocalDateTime(transactionDto.getBeginTime()));
                 transaction.setCoordinatorURL(transactionDto.getCoordinatorURL());
                 transaction.setOwnerTM(transactionDto.getOwnerTM());
+                transaction.setBeginTime(Converter.fromLongToLocalDateTime(transactionDto.getBeginTime()));
+                transaction.setRepliesOwedOthers(transactionDto.getRepliesOwedOthers());
 
                 InternalThread it = internalThreadService.save(transactionDto.getActiveThread());
                 if(it!= null) {

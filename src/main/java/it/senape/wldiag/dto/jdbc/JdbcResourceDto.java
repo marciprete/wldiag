@@ -52,19 +52,19 @@ public class JdbcResourceDto implements Serializable {
         this.enabled = enabled;
     }
 
-    public Boolean getXA() {
+    public Boolean geIstXA() {
         return isXA;
     }
 
-    public void setXA(Boolean XA) {
-        isXA = XA;
+    public void setIsXA(Boolean isXA) {
+        this.isXA = isXA;
     }
 
-    public Boolean getJTS() {
+    public Boolean getIsJTS() {
         return isJTS;
     }
 
-    public void setJTS(Boolean JTS) {
+    public void setIsJTS(Boolean JTS) {
         isJTS = JTS;
     }
 
