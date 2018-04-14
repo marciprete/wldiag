@@ -27,7 +27,7 @@ public class ITInternalThreadRepositoryTest {
 
     @Test
     public void findByDiagnosticImageIdAndNames_criteriaMatch_shouldReturnAList() throws Exception {
-        Long diagnosticImageId = 2l;
+        Long diagnosticImageId = 1l;
         Collection<String> threadNames = Arrays.asList("[ACTIVE] ExecuteThread: '18' for queue: 'weblogic.kernel.Default (self-tuning)'", "[STUCK] ExecuteThread: '17' for queue: 'weblogic.kernel.Default (self-tuning)'");
         List<InternalThread> threadList = repo.findAllByDiagnosticImageIdAndNameIn(diagnosticImageId, threadNames);
         assertFalse(threadList.isEmpty());
