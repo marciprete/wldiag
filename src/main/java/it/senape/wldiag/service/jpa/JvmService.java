@@ -53,7 +53,7 @@ public class JvmService {
 
         Map<String, ThreadDump> threadDumpMap = extractThreadDumps(jvmDto.getThreadDump());
         Map<String, ExecutionDetails> executionDetailsMap = extractExecutionDetails(jvmDto.getThreadRequestExecutionDetails());
-        Map<String, InternalThread> internalThreadMap = getInternalThreadMap(threadDumpMap.keySet());
+        Map<String, InternalThread> internalThreadMap = getInternalThreadMap(diagnosticImage.getId(), threadDumpMap.keySet());
 
         for (String threadName : threadDumpMap.keySet()) {
             ThreadDump threadDump = threadDumpMap.get(threadName);
@@ -75,8 +75,8 @@ public class JvmService {
         return jvmRepository.save(jvm).getId() != null;
     }
 
-    private Map<String,InternalThread> getInternalThreadMap(Set<String> threadNames) {
-        List<InternalThread> threadList = internalThreadRepository.findAllByNameIn(threadNames);
+    private Map<String,InternalThread> getInternalThreadMap(Long diagnosticImageId, Set<String> threadNames) {
+        List<InternalThread> threadList = internalThreadRepository.findAllByDiagnosticImageIdAndNameIn(diagnosticImageId, threadNames);
         Map<String, InternalThread> internalThreadMap = new HashMap<>();
         for (InternalThread internalThread : threadList) {
             if (internalThreadMap.get(internalThread.getName())==null) {

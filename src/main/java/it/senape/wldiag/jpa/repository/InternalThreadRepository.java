@@ -21,7 +21,7 @@ public interface InternalThreadRepository extends CrudRepository<InternalThread,
     List<InternalThread> findAllByNameIn(Set<String> threadNames);
 
     @Query(value = "select it from InternalThread it " +
-            "join it.transactions as t " +
+            "join it.transaction as t " +
             "join t.jta as jta " +
             "join jta.diagnosticImage di " +
             "where di.id = :diagnosticImageId " +

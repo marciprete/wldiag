@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by michele.arciprete on 10-Jan-18.
  */
-public class TransactionsMessage implements Serializable {
+public class TransactionMessage implements Serializable {
 
     private String xid;//="BEA1-1E47ED1E038FAAAEA9A1"
     private String state;//="active"

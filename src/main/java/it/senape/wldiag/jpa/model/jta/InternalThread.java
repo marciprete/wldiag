@@ -1,14 +1,8 @@
 package it.senape.wldiag.jpa.model.jta;
 
 import it.senape.wldiag.jpa.model.AbstractEntity;
-import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import java.util.LinkedList;
-import java.util.List;
+import javax.persistence.*;
 
 /**
  * Created by michele.arciprete on 15-Dec-17.
@@ -19,13 +13,12 @@ public class InternalThread extends AbstractEntity<Long>  {
     private String name;
     private Integer poolNumber;
     private String type;
+    private String wlsStatus;
 
-    @OneToMany(
-            mappedBy = "activeThread",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+    @OneToOne(cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY)
-    private List<Transaction> transactions = new LinkedList<>();
+    @JoinColumn(name="transaction_id")
+    private Transaction transaction;
 
     public String getName() {
         return name;
@@ -51,18 +44,30 @@ public class InternalThread extends AbstractEntity<Long>  {
         this.type = type;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public Transaction getTransaction() {
+        return transaction;
     }
 
-    public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        transaction.setActiveThread(this);
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 
-    public void removeTransaction(Transaction transaction) {
-        transactions.remove(transaction);
-        transaction.setActiveThread(null);
+    //    public void addTransaction(Transaction transaction) {
+//        transactions.add(transaction);
+//        transaction.setActiveThread(this);
+//    }
+
+//    public void removeTransaction(Transaction transaction) {
+//        transactions.remove(transaction);
+//        transaction.setActiveThread(null);
+//    }
+
+    public String getWlsStatus() {
+        return wlsStatus;
+    }
+
+    public void setWlsStatus(String wlsStatus) {
+        this.wlsStatus = wlsStatus;
     }
 
     @Override
@@ -71,6 +76,7 @@ public class InternalThread extends AbstractEntity<Long>  {
                 "name='" + name + '\'' +
                 ", poolNumber=" + poolNumber +
                 ", type='" + type + '\'' +
+                ", wlsStatus='" + wlsStatus + '\'' +
                 '}';
     }
 }

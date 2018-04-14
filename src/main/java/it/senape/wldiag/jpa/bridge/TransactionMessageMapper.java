@@ -7,7 +7,9 @@ import it.senape.wldiag.dto.ResourceDto;
 import it.senape.wldiag.jpa.model.jta.EjbTransactionProperty;
 import it.senape.wldiag.jpa.model.jta.InternalThread;
 import it.senape.wldiag.jpa.model.jta.Transaction;
-import it.senape.wldiag.message.TransactionsMessage;
+import it.senape.wldiag.message.TransactionMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,36 +19,35 @@ import java.util.List;
 
 /**
  * This class is a mapper class that is used to transform {@link Transaction} objects
- * into {@link TransactionsMessage} objects.
+ * into {@link TransactionMessage} objects.
  * Created by michele.arciprete on 18-Dec-17.
  */
 public final class TransactionMessageMapper {
 
-    private TransactionMessageMapper() {
-    }
+    private static final Logger logger = LoggerFactory.getLogger(TransactionMessageMapper.class);
 
     /**
      * Transforms the list of {@link Transaction} objects given as a method parameter
-     * into a list of {@link TransactionsMessage} objects and returns the created list.
+     * into a list of {@link TransactionMessage} objects and returns the created list.
      *
      * @param entities
      * @return
      */
-    public static List<TransactionsMessage> mapEntitiesIntoDTOs(Iterable<Transaction> entities) {
-        List<TransactionsMessage> dtos = new ArrayList<>();
+    public static List<TransactionMessage> mapEntitiesIntoDTOs(Iterable<Transaction> entities) {
+        List<TransactionMessage> dtos = new ArrayList<>();
         entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
         return dtos;
     }
 
     /**
      * Transforms the {@link Transaction} object given as a method parameter into a
-     * {@link TransactionsMessage} object and returns the created object.
+     * {@link TransactionMessage} object and returns the created object.
      *
      * @param entity
      * @return
      */
-    public static TransactionsMessage mapEntityIntoDTO(Transaction entity) {
-        TransactionsMessage dto = new TransactionsMessage();
+    public static TransactionMessage mapEntityIntoDTO(Transaction entity) {
+        TransactionMessage dto = new TransactionMessage();
 
         dto.setXid(entity.getXid());
         dto.setState(entity.getState());
@@ -54,7 +55,6 @@ public final class TransactionMessageMapper {
         dto.setBeginTime(entity.getBeginTime());
         dto.setCoordinatorURL(entity.getCoordinatorURL());
         dto.setOwnerTM(entity.getOwnerTM());
-
 
         InternalThreadDto activeThread = new InternalThreadDto();
         InternalThread internalThread = entity.getActiveThread();
@@ -65,7 +65,7 @@ public final class TransactionMessageMapper {
             activeThread.setType(internalThread.getType());
             dto.setActiveThread(activeThread);
         } else {
-            System.out.println("ERROR INTERNAL THREAD NULL!!!!!");
+            logger.error("Internal Thread is null");
         }
 
         dto.setRepliesOwedMe(entity.getRepliesOwedMe());
@@ -125,8 +125,8 @@ public final class TransactionMessageMapper {
      * @param source      The {@code Page<ENTITY>} object.
      * @return The created {@code Page<DTO>} object.
      */
-    public static Page<TransactionsMessage> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Transaction> source) {
-        List<TransactionsMessage> dtos = mapEntitiesIntoDTOs(source.getContent());
+    public static Page<TransactionMessage> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Transaction> source) {
+        List<TransactionMessage> dtos = mapEntitiesIntoDTOs(source.getContent());
         return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
     }
 }

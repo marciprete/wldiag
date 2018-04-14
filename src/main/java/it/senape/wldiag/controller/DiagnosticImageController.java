@@ -3,6 +3,7 @@ package it.senape.wldiag.controller;
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.exceptions.StorageException;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
 import it.senape.wldiag.service.filesystem.DiagnosticImageResource;
 import it.senape.wldiag.service.filesystem.DiagnosticImageXmlService;
 import it.senape.wldiag.service.jpa.DiagnosticImageService;
@@ -46,6 +47,7 @@ public class DiagnosticImageController {
     private DiagnosticImageService diagnosticImageService;
     private DiagnosticImageXmlService diagnosticImageXmlService;
 
+
     @Autowired
     public DiagnosticImageController(StorageService storageService,
                                      DiagnosticImageService diagnosticImageService,
@@ -59,9 +61,9 @@ public class DiagnosticImageController {
 
     @ResponseBody
     @RequestMapping(value = UrlMappings.SHOW + "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<DiagnosticImageDto> show(@PathVariable("id") Long id) {
+    public ResponseEntity<DiagnosticImageDetail> show(@PathVariable("id") Long id) {
         logger.trace(">> Show diagnostic image with id: {}", id);
-        DiagnosticImageDto dto = diagnosticImageService.findById(id);
+        DiagnosticImageDetail dto = diagnosticImageService.getDiagnosticImageDetails(id);
         if (dto != null && dto.getFileName()!=null) {
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }
@@ -153,6 +155,5 @@ public class DiagnosticImageController {
         }
         return ResponseEntity.ok().body("OK");
     }
-
 
 }

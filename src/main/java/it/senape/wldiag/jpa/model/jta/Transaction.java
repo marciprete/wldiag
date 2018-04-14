@@ -21,9 +21,10 @@ public class Transaction extends AbstractEntity<Long> {
     @Column(length = 750)
     private String ownerTM;//="ServerTM[ServerCoordinatorDescriptor=(CoordinatorURL=ManagedServer_1+172.26.80.143:7011+ebooking+t3+ CoordinatorNonSecureURL=ManagedServer_1+172.26.80.143:7011+ebooking+t3+ coordinatorSecureURL=ManagedServer_1+172.26.80.143:7503+ebooking+t3s+, XAResources={WSATGatewayRM_ManagedServer_1_ebooking, EBOOKING_DATASOURCE_ebooking},NonXAResources={})]"
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE)
-    @JoinColumn(name="internal_thread_id")
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "transaction")
     private InternalThread activeThread;//="Thread[StartupThread_OPTION_BOOKINGS[GRIMALDI FERRY],5,Pooled Threads]"
 
     private Integer repliesOwedMe;//="0"

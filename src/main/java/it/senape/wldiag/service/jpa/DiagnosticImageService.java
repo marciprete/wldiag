@@ -1,6 +1,7 @@
 package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.TransactionException;
@@ -21,4 +22,6 @@ public interface DiagnosticImageService {
     Boolean save(DiagnosticImageDto dto) throws TransactionException;
 
     void delete(String fileName, Long customerId);
+
+    DiagnosticImageDetail getDiagnosticImageDetails(Long diagnosticImageId);
 }

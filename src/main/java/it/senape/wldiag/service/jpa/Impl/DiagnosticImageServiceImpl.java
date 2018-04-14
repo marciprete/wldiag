@@ -8,6 +8,7 @@ import it.senape.wldiag.dto.workmanager.WorkManagerDto;
 import it.senape.wldiag.jpa.bridge.DiagnosticImageMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
 import it.senape.wldiag.service.jpa.*;
@@ -115,6 +116,11 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     @Override
     public void delete(String fileName, Long customerId) {
         diagnosticImageRepository.deleteByFileNameAndCustomer_Id(fileName, customerId);
+    }
+
+    @Override
+    public DiagnosticImageDetail getDiagnosticImageDetails(Long diagnosticImageId) {
+        return diagnosticImageRepository.findDiagnosticImageDetails(diagnosticImageId);
     }
 
     @Override
