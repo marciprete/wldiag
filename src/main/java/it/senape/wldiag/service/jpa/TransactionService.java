@@ -4,6 +4,8 @@ import it.senape.wldiag.jpa.projection.ThreadedTransaction;
 import it.senape.wldiag.jpa.repository.TransactionRepository;
 import it.senape.wldiag.message.DiagnosticImagesTransactionsMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -96,7 +98,7 @@ public class TransactionService {
         return dto;
     }
 
-    public Collection<ThreadedTransaction> findAllThreadedTransaction(Long diagnosticImageId) {
-        return transactionRepository.findAllThreadedTransaction(diagnosticImageId);
+    public Page<ThreadedTransaction> findAllThreadedTransaction(Long diagnosticImageId, Pageable pageRequest) {
+        return transactionRepository.findAllThreadedTransaction(diagnosticImageId, pageRequest);
     }
 }

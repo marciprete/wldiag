@@ -2,6 +2,8 @@ package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.jta.Transaction;
 import it.senape.wldiag.jpa.projection.ThreadedTransaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -66,8 +68,11 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
             "inner join execution_details ed on ed.thread_dump_id=td.id " +
             "inner join work w on ed.id=w.execution_details_id " +
             "where di.id= :diagnosticImageId",
+            countQuery = "select count(*) from transaction t " +
+                    "inner join jta on jta.id=t.jta_id " +
+                    "where jta.diagnostic_image_id = :diagnosticImageId",
             nativeQuery=true)
-    Collection<ThreadedTransaction> findAllThreadedTransaction(@Param("diagnosticImageId") Long diagnosticImageId);
+    Page<ThreadedTransaction> findAllThreadedTransaction(@Param("diagnosticImageId") Long diagnosticImageId, Pageable pageRequest);
 
 
 }

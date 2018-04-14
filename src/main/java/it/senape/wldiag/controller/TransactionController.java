@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,8 +61,9 @@ public class TransactionController {
 
     @ResponseBody
     @RequestMapping(value = "diagnosticImage/{diagnosticImageId}", method = RequestMethod.GET)
-    public ResponseEntity<Collection<ThreadedTransaction>> getTransactionsByDiagnosticImageId(@PathVariable("diagnosticImageId") Long diId) {
-        Collection<ThreadedTransaction> allThreadedTransaction = transactionService.findAllThreadedTransaction(diId);
+    public ResponseEntity<Page<ThreadedTransaction>> getTransactionsByDiagnosticImageId(@PathVariable("diagnosticImageId") Long diId,
+                                                                                              Pageable pageRequest) {
+        Page<ThreadedTransaction> allThreadedTransaction = transactionService.findAllThreadedTransaction(diId,pageRequest);
         return ResponseEntity.ok().body(allThreadedTransaction);
     }
 }
