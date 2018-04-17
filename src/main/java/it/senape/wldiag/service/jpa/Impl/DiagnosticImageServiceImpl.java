@@ -5,10 +5,11 @@ import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
 import it.senape.wldiag.dto.jvm.JvmDto;
 import it.senape.wldiag.dto.workmanager.WorkManagerDto;
-import it.senape.wldiag.jpa.bridge.DiagnosticImageMapper;
+import it.senape.wldiag.jpa.bridge.DiagnosticImageProjectionMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
+import it.senape.wldiag.jpa.projection.DiagnosticImageProjection;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
 import it.senape.wldiag.service.jpa.*;
@@ -16,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionException;
@@ -124,6 +127,11 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     }
 
     @Override
+    public long count() {
+        return diagnosticImageRepository.count();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public DiagnosticImageDto findById(Long id) {
         Optional<DiagnosticImage> di = diagnosticImageRepository.findById(id);
@@ -140,22 +148,16 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     @Transactional(readOnly = true)
     public Page<DiagnosticImageDto> findLatest(Pageable pageRequest) {
         logger.trace("Find latest DIs");
-//        if (pageRequest.getSort() == null) {
-//            pageRequest = new PageRequest(pageRequest.getOffset(),
-//                    pageRequest.getPageSize(),
-//                    Sort.Direction.DESC,
-//                    "acquisitionTime");
-//        }
-        Page<DiagnosticImage> resultsPage = diagnosticImageRepository.findAll(pageRequest);
+        if (pageRequest.getSort() == null) {
+            pageRequest = PageRequest.of(pageRequest.getPageNumber(),
+                    pageRequest.getPageSize(),
+                    Sort.Direction.DESC,
+                    "acquisitionTime");
+        }
+        Page<DiagnosticImageProjection> resultsPage = diagnosticImageRepository.retrieveAll(pageRequest);
         logger.debug("Found {} diagnostic images", resultsPage.getTotalElements());
-        return DiagnosticImageMapper.mapEntityPageIntoDTOPage(pageRequest, resultsPage);
+        return DiagnosticImageProjectionMapper.mapEntityPageIntoDTOPage(pageRequest, resultsPage);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<DiagnosticImageDto> findAll() {
-        Iterable<DiagnosticImage> entities = diagnosticImageRepository.findAll();
-        return DiagnosticImageMapper.mapEntitiesIntoDTOs(entities);
-    }
 
 }

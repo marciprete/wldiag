@@ -2,12 +2,15 @@ package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
+import it.senape.wldiag.jpa.projection.DiagnosticImageProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by michele.arciprete on 15-Dec-17.
@@ -26,11 +29,13 @@ public interface DiagnosticImageRepository extends PagingAndSortingRepository<Di
      * @param pageable
      * @return a Page with the DiagnosticImage
      */
-    @Query(value = "select di from DiagnosticImage di "
-           + "join fetch di.customer as c "
-//         +   "left join fetch di.server as s"
-    ,countQuery = "select count(di) from DiagnosticImage di")
-    Page<DiagnosticImage> findAll(Pageable pageable);
+    @Query(value = "select di.id, di.file_name name, di.acquisition_time acquisitionTime, " +
+            "c.name as customerName, c.id as customerId from diagnostic_image di "
+           + "inner join customer c on c.id=di.customer_id"
+    ,countQuery = "select count(*) from diagnostic_image di"
+    ,nativeQuery = true
+    )
+    Page<DiagnosticImageProjection> retrieveAll(Pageable pageable);
 
 
 //    /**

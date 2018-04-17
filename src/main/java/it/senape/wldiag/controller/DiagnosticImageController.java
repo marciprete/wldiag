@@ -156,4 +156,11 @@ public class DiagnosticImageController {
         return ResponseEntity.ok().body("OK");
     }
 
+
+    @ResponseBody
+    @RequestMapping(value = "count", method = RequestMethod.GET)
+    public long count() {
+        return diagnosticImageService.count();
+    }
+
 }

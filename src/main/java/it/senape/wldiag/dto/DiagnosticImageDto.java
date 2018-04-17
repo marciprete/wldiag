@@ -97,43 +97,6 @@ public class DiagnosticImageDto implements Serializable {
         this.jvmDto = jvmDto;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DiagnosticImageDto that = (DiagnosticImageDto) o;
-
-        if (!fileName.equals(that.fileName)) return false;
-        if (!acquisitionTime.equals(that.acquisitionTime)) return false;
-        if (customerName != null ? !customerName.equals(that.customerName) : that.customerName != null) return false;
-        return serverName != null ? serverName.equals(that.serverName) : that.serverName == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = fileName.hashCode();
-        result = 31 * result + acquisitionTime.hashCode();
-        result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
-        result = 31 * result + (serverName != null ? serverName.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DiagnosticImageDto{" +
-                "imageId=" + imageId +
-                ", fileName='" + fileName + '\'' +
-                ", acquisitionTime=" + acquisitionTime +
-                ", customerId=" + customerId +
-                ", customerName='" + customerName + '\'' +
-                ", serverId=" + serverId +
-                ", serverName='" + serverName + '\'' +
-                ", jta ='" + jtaDto + '\'' +
-                ", jdbcResourcePool='" + jdbcResourcePool + '\'' +
-                '}';
-    }
-
     public void setImageId(Long imageId) {
         this.imageId = imageId;
     }

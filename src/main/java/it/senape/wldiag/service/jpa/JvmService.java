@@ -76,11 +76,13 @@ public class JvmService {
     }
 
     private Map<String,InternalThread> getInternalThreadMap(Long diagnosticImageId, Set<String> threadNames) {
-        List<InternalThread> threadList = internalThreadRepository.findAllByDiagnosticImageIdAndNameIn(diagnosticImageId, threadNames);
         Map<String, InternalThread> internalThreadMap = new HashMap<>();
-        for (InternalThread internalThread : threadList) {
-            if (internalThreadMap.get(internalThread.getName())==null) {
-                internalThreadMap.put(internalThread.getName(), internalThread);
+        if(!threadNames.isEmpty()) {
+            List<InternalThread> threadList = internalThreadRepository.findAllByDiagnosticImageIdAndNameIn(diagnosticImageId, threadNames);
+            for (InternalThread internalThread : threadList) {
+                if (internalThreadMap.get(internalThread.getName())==null) {
+                    internalThreadMap.put(internalThread.getName(), internalThread);
+                }
             }
         }
         return internalThreadMap;

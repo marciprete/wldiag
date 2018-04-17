@@ -6,8 +6,10 @@ import java.io.Serializable;
  * Created by michele.arciprete on 10-Jan-18.
  */
 public class EjbTransactionPropertyDto implements Serializable {
+
     private Long id;
-    private String className;
+    private String fqnClassName;
+    private String simpleClassName;
     private String method;
     private String arguments;
 
@@ -19,12 +21,20 @@ public class EjbTransactionPropertyDto implements Serializable {
         this.id = id;
     }
 
-    public String getClassName() {
-        return className;
+    public String getFqnClassName() {
+        return fqnClassName;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setFqnClassName(String fqnClassName) {
+        this.fqnClassName = fqnClassName;
+    }
+
+    public String getSimpleClassName() {
+        return simpleClassName;
+    }
+
+    public void setSimpleClassName(String simpleClassName) {
+        this.simpleClassName = simpleClassName;
     }
 
     public String getMethod() {

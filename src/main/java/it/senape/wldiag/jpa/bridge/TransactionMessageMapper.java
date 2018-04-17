@@ -84,7 +84,9 @@ public final class TransactionMessageMapper {
                     EjbTransactionPropertyDto ejbTransactionDTO = new EjbTransactionPropertyDto();
                     EjbTransactionProperty ejbTx = (EjbTransactionProperty) prop;
                     ejbTransactionDTO.setId(ejbTx.getId());
-                    ejbTransactionDTO.setClassName(ejbTx.getClassName());
+                    String className = ejbTx.getClassName();
+                    ejbTransactionDTO.setFqnClassName(className);
+                    ejbTransactionDTO.setSimpleClassName(className.substring(className.lastIndexOf(".")));
                     ejbTransactionDTO.setMethod(ejbTx.getMethod());
                     ejbTransactionDTO.setArguments(ejbTx.getArguments());
                     dto.getEjbTransactions().add(ejbTransactionDTO);

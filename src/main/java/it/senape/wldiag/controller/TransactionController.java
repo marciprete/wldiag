@@ -3,6 +3,8 @@ package it.senape.wldiag.controller;
 import it.senape.wldiag.jpa.bridge.TransactionMessageMapper;
 import it.senape.wldiag.jpa.model.jta.Transaction;
 import it.senape.wldiag.jpa.projection.ThreadedTransaction;
+import it.senape.wldiag.jpa.projection.TopClass;
+import it.senape.wldiag.jpa.projection.TopMethod;
 import it.senape.wldiag.jpa.repository.TransactionRepository;
 import it.senape.wldiag.message.DiagnosticImagesTransactionsMessage;
 import it.senape.wldiag.message.TransactionMessage;
@@ -65,5 +67,23 @@ public class TransactionController {
                                                                                               Pageable pageRequest) {
         Page<ThreadedTransaction> allThreadedTransaction = transactionService.findAllThreadedTransaction(diId,pageRequest);
         return ResponseEntity.ok().body(allThreadedTransaction);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/topClasses", method=RequestMethod.GET)
+    public ResponseEntity<List<TopClass>> getTopClasses() {
+        return ResponseEntity.ok(transactionService.getTopClasses());
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/topMethods", method=RequestMethod.GET)
+    public ResponseEntity<List<TopMethod>> getTopMethods() {
+        return ResponseEntity.ok(transactionService.getTopMethods());
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/count", method=RequestMethod.GET)
+    public long count() {
+        return transactionService.count();
     }
 }

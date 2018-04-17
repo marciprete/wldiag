@@ -52,7 +52,7 @@ public class DiagnosticImageXmlService {
         DiagnosticImageDto diagnosticImageDto = new DiagnosticImageDto();
         Path path = resource.getPath();
         diagnosticImageDto.setFileName(path.getFileName().toString());
-        diagnosticImageDto.setServerName(resource.getServerName());
+//        diagnosticImageDto.setServerName(resource.getServerName());
         diagnosticImageDto.setAcquisitionTime(resource.getAcquisitionTime());
 
         if (path != null) {

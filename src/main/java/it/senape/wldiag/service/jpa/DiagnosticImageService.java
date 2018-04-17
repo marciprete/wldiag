@@ -15,8 +15,6 @@ public interface DiagnosticImageService {
 
     DiagnosticImageDto findById(Long id);
 
-    List<DiagnosticImageDto> findAll();
-
     Page<DiagnosticImageDto> findLatest(Pageable pageRequest);
 
     Boolean save(DiagnosticImageDto dto) throws TransactionException;
@@ -24,4 +22,8 @@ public interface DiagnosticImageService {
     void delete(String fileName, Long customerId);
 
     DiagnosticImageDetail getDiagnosticImageDetails(Long diagnosticImageId);
+
+    long count();
+
+//    int count(Long customerId);
 }

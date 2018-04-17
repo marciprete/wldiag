@@ -1,6 +1,9 @@
 package it.senape.wldiag.service.jpa;
 
 import it.senape.wldiag.jpa.projection.ThreadedTransaction;
+import it.senape.wldiag.jpa.projection.TopClass;
+import it.senape.wldiag.jpa.projection.TopMethod;
+import it.senape.wldiag.jpa.repository.EjbTransactionRepository;
 import it.senape.wldiag.jpa.repository.TransactionRepository;
 import it.senape.wldiag.message.DiagnosticImagesTransactionsMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by michele.arciprete on 07-Apr-18
@@ -17,10 +21,13 @@ import java.util.Collection;
 public class TransactionService {
 
     private TransactionRepository transactionRepository;
+    private EjbTransactionRepository ejbTransactionRepository;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              EjbTransactionRepository ejbTransactionRepository) {
         this.transactionRepository = transactionRepository;
+        this.ejbTransactionRepository = ejbTransactionRepository;
     }
 
     public DiagnosticImagesTransactionsMessage getDiagnosticImageTransactions(Long diagnosticImageId) {
@@ -100,5 +107,17 @@ public class TransactionService {
 
     public Page<ThreadedTransaction> findAllThreadedTransaction(Long diagnosticImageId, Pageable pageRequest) {
         return transactionRepository.findAllThreadedTransaction(diagnosticImageId, pageRequest);
+    }
+
+    public long count() {
+        return transactionRepository.count();
+    }
+
+    public List<TopMethod> getTopMethods() {
+        return ejbTransactionRepository.getTopMethods();
+    }
+
+    public List<TopClass> getTopClasses() {
+        return ejbTransactionRepository.getTopClasses();
     }
 }

@@ -9,6 +9,11 @@ import javax.persistence.*;
 @Table(name = "ejb_transaction")
 @PrimaryKeyJoinColumn(name="ejb_transaction_id", referencedColumnName = "property_id")
 public class EjbTransactionProperty extends Property {
+
+    /**
+     * Fully qualified name of the class
+     */
+    @Column(length = 500)
     private String className;
 
     @Column(length = 750)
