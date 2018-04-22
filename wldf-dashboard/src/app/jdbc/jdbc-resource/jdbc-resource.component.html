@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form class="form-horizontal">
+      <fieldset>
+        {{page}}<br>
+        {{resourcePage.totalElements}}<br>
+        {{resourcePage.number}}<br>
+        {{resourcePage.numberOfElements}}<br>
+        {{resourcePage.totalPages}}<br>
+        <legend>Filters</legend>
+        <label>Enabled flag</label><br>
+        <div class="btn-group" data-toggle="buttons">
+          <label [ngClass]="['btn', 'btn-primary', enabled==='all' ? 'active' : '']">
+            <input type="radio"
+                   name="enabledFilter"
+                   [value]="'all'"
+                   (change)="changeFlag(page)"
+                   [(ngModel)]="enabled"
+            > All
+          </label>
+          <label [ngClass]="['btn', 'btn-primary', enabled==='enabled' ? 'active' : '']">
+            <input type="radio"
+                   name="enabledFilter"
+                   [value]="'enabled'"
+                   [checked]="enabled==='enabled'"
+                   (change)="changeFlag(page)"
+                   [(ngModel)]="enabled"
+            > Enabled
+          </label>
+          <label [ngClass]="['btn', 'btn-primary', enabled==='disabled' ? 'active' : '']">
+            <input type="radio"
+                   name="enabledFilter"
+                   [value]="'disabled'"
+                   [checked]="enabled==='disabled'"
+                   (change)="changeFlag(page)"
+                   [(ngModel)]="enabled"
+            > Disabled
+          </label>
+        </div>
+
+      </fieldset>
+      <div class="form-group">
+      </div>
+    </form>
+  </div>
+  <div class="col-xs-12">
+    <ngb-pagination [collectionSize]="resourcePage.totalElements"
+                    [(page)]="page"
+                    [pageSize]="20"
+                    (pageChange)="change($event)"
+                    aria-label="Default pagination"></ngb-pagination>
+
+    <table class="table table-condensed
+    table-striped table-bordered table-responsive table-hover">
+      <thead>
+        <tr>
+          <!--<th>AutoCommit</th>-->
+          <th>Enabled</th>
+          <!--<th>XA</th>-->
+          <!--<th>JTS</th>-->
+          <!--<th>VendorID</th>-->
+          <!--<th>Connection used</th>-->
+          <!--<th>Do init</th>-->
+          <th>Destroyed</th>
+          <th>Poolname</th>
+          <!--<th>App name</th>-->
+          <th>Module name</th>
+          <th>Connect time</th>
+          <!--<th>Dirty I.L.</th>-->
+          <th>Initial Isolation Level</th>
+          <th>Infected</th>
+          <th>Last Connection</th>
+          <!--<th>secondsToTrustAnIdlePoolConnection</th>-->
+          <th>Current User</th>
+          <!--<th>Current Thread</th>-->
+          <!--<th>Last User</th>-->
+          <!--<th>Current Error</th>-->
+          <!--<th>Curr.Error Timestamp</th>-->
+          <th>JDBC4Runtime</th>
+          <!--<th>Support Statement Poolable</th>-->
+          <!--<th>Need Restore Client Info</th>-->
+          <th>Default Client Info</th>
+          <!--<th>Support Is Valid</th>-->
+          <th>StackTrace</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let resource of resourcePage.content" [class]="resource.connUsed ? 'success' : ''">
+        <!--<td>{{resource.autoCommit}}</td>-->
+        <td><span [class]="resource.enabled ? 'glyphicon glyphicon-ok': 'glyphicon glyphicon-remove'" aria-hidden="true"></span></td>
+        <!--<td>{{resource.isXA}}</td>-->
+        <!--<td>{{resource.isJTS}}</td>-->
+        <!--<td>{{resource.vendorID}}</td>-->
+        <!--<td>{{resource.connUsed}}</td>-->
+        <!--<td>{{resource.doInit}}</td>-->
+        <td>{{resource.destroyed}}</td>
+        <td>{{resource.poolname}}</td>
+        <!--<td>{{resource.appname}}</td>-->
+        <td>{{resource.moduleName}}</td>
+        <td>{{resource.connectTime}}</td>
+        <!--<td>{{resource.dirtyIsolationLevel}}</td>-->
+        <td>{{resource.initialIsolationLevel}}</td>
+        <td>{{resource.infected}}</td>
+        <td>{{resource.lastSuccessfulConnectionUse}}</td>
+        <!--<td>{{resource.secondsToTrustAnIdlePoolConnection}}</td>-->
+        <td>{{resource.currentUser}}</td>
+        <!--<td>{{resource.currentThread}}</td>-->
+        <!--<td>{{resource.lastUser}}</td>-->
+        <!--<td>{{resource.currentError}}</td>-->
+        <!--<td>{{resource.currentErrorTimestamp}}</td>-->
+        <td>{{resource.JDBC4Runtime}}</td>
+        <!--<td>{{resource.supportStatementPoolable}}</td>-->
+        <!--<td>{{resource.needRestoreClientInfo}}</td>-->
+        <td>{{resource.defaultClientInfo}}</td>
+        <!--<td>{{resource.supportIsValid}}</td>-->
+        <td class="code">{{resource.stackTrace}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="resourcePage.totalElements"
+                    [page]="resourcePage.number"
+                    aria-label="Default pagination"></ngb-pagination>
+
+  </div>
+  <div class="col-xs-12">
+
+  </div>
+</div>

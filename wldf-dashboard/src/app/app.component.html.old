@@ -1,0 +1,183 @@
+<app-header (featureSelected)="onNavigate($event)"></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="#" (click)="onSelect('dashboard')">Dashboard <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li><a href="/transactions">Jta transactions</a></li>
+        <li><a href="">JVM</a></li>
+        <li><a href="">Deployment</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <router-outlet></router-outlet>
+    <!--<app-diagnostic-images></app-diagnostic-images>-->
+
+
+    <!--<app-customer-list></app-customer-list>-->
+    <!--&lt;!&ndash;<h1 class="page-header">Dashboard</h1>&ndash;&gt;-->
+    <!--&lt;!&ndash;<section class="row text-center placeholders">&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="col-6 col-sm-3 placeholder">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200"&ndash;&gt;-->
+             <!--&lt;!&ndash;class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Label</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="text-muted">Something else</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="col-6 col-sm-3 placeholder">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200"&ndash;&gt;-->
+             <!--&lt;!&ndash;class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Label</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="text-muted">Something else</span>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="col-6 col-sm-3 placeholder">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200"&ndash;&gt;-->
+             <!--&lt;!&ndash;class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Label</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="text-muted">Something else</span>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="col-6 col-sm-3 placeholder">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200"&ndash;&gt;-->
+             <!--&lt;!&ndash;class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Label</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="text-muted">Something else</span>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;</section>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;<h2 class="sub-header">Section title</h2>&ndash;&gt;-->
+    <!--&lt;!&ndash;<div class="table-responsive">&ndash;&gt;-->
+      <!--&lt;!&ndash;<table class="table table-striped">&ndash;&gt;-->
+        <!--&lt;!&ndash;<thead>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<th>#</th>&ndash;&gt;-->
+          <!--&lt;!&ndash;<th>Header</th>&ndash;&gt;-->
+          <!--&lt;!&ndash;<th>Header</th>&ndash;&gt;-->
+          <!--&lt;!&ndash;<th>Header</th>&ndash;&gt;-->
+          <!--&lt;!&ndash;<th>Header</th>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;</thead>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tbody>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,001</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Lorem</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>ipsum</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>dolor</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sit</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,002</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>amet</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>consectetur</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>adipiscing</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>elit</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,003</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Integer</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nec</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>odio</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Praesent</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,003</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>libero</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Sed</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>cursus</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>ante</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,004</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>dapibus</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>diam</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Sed</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nisi</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,005</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Nulla</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>quis</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sem</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>at</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,006</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nibh</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>elementum</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>imperdiet</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Duis</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,007</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sagittis</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>ipsum</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Praesent</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>mauris</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,008</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Fusce</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nec</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>tellus</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sed</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,009</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>augue</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>semper</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>porta</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Mauris</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,010</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>massa</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Vestibulum</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>lacinia</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>arcu</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,011</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>eget</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nulla</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Class</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>aptent</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,012</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>taciti</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sociosqu</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>ad</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>litora</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,013</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>torquent</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>per</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>conubia</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>nostra</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,014</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>per</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>inceptos</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>himenaeos</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>Curabitur</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>1,015</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>sodales</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>ligula</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>in</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td>libero</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tbody>&ndash;&gt;-->
+      <!--&lt;!&ndash;</table>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  </div>
+</div>
+
+

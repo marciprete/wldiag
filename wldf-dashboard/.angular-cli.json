@@ -26,9 +26,11 @@
         ,"../node_modules/admin-lte/dist/css/skins/skin-blue.min.css"
         ,"../node_modules/datatables.net-bs/css/dataTables.bootstrap.css"
         ,"../node_modules/ng-bootstrap-to-bootstrap-3/dist/ng-bootstrap-to-bootstrap-3.min.css"
+        ,"./styles.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/datatables.net/js/jquery.dataTables.js",
         "../node_modules/datatables.net-bs/js/dataTables.bootstrap.js"
       ],
       "environmentSource": "environments/environment.ts",

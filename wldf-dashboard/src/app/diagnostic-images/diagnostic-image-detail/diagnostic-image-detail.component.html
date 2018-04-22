@@ -1,0 +1,129 @@
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title">Diagnostic Image Details</h3>
+  </div><!-- /.box-header -->
+  <div class="box-body">
+    {{diagnosticImage.fileName}}
+  </div><!-- /.box-body -->
+  <div class="box-footer">
+    {{diagnosticImage.acquisitionTime}}
+  </div><!-- box-footer -->
+</div><!-- /.box -->
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">JVM</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="progress-group">
+          <span class="progress-text">Total Threads started</span>
+          <span class="progress-number"><b>{{diagnosticImage.totalStartedThreadCount}}</b></span>
+
+          <div class="progress sm">
+            <div class="progress-bar progress-bar-aqua" style="width: 100%"></div>
+          </div>
+        </div>
+        <div class="progress-group">
+          <span class="progress-text">Thread count / peak</span>
+          <span
+            class="progress-number"><b>{{diagnosticImage.threadCount}}</b> / {{diagnosticImage.peakThreadCount}}</span>
+
+          <div class="progress sm">
+            <div class="progress-bar progress-bar-aqua"
+                 [style.width]="(diagnosticImage.threadCount * 100)/ diagnosticImage.peakThreadCount + '%'"></div>
+          </div>
+        </div>
+
+      </div><!-- /.box-body -->
+    </div>
+  </div><!-- /first col -->
+  <div class="col-md-4">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">Transactions</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div [hidden]="!txChart">
+          <canvas id="txChart"></canvas>
+        </div>
+      </div>
+      <!-- /.box-body -->
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Memory</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div [hidden]="!memChart">
+          <canvas id="memChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">Transactions</h3>
+      </div>
+      <div class="box-body">
+        <div class="dt-bootstrap">
+          <div class="row">
+            <div class="col-xs-12" > <!-- style="overflow: scroll" -->
+              <table class="table table-bordered table-hover dataTable">
+                <thead>
+                <tr role="row">
+                  <!--<th>XID</th>-->
+                  <!--<th>Thread Name</th>-->
+                  <!--<th>Begin Time</th>-->
+                  <th>Status</th>
+                  <th>Wls Status</th>
+                  <th>Java Thread State</th>
+                  <th>Stack Trace</th>
+                  <th>Extra Info</th>
+                  <th>Started Time Millis</th>
+                  <!--<th>Pool Number</th>-->
+                  <!--<th>Work Manager Type</th>-->
+                  <!--<th>Work Manager</th>-->
+                  <!--<th>Started</th>-->
+                  <!--<th>Scheduled</th>-->
+                  <th>Class Name</th>
+                  <th>Method</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr *ngFor="let transaction of transactions">
+                  <!--<td>{{ (transaction.xid.length>6)? (transaction.xid | slice:0:6)+'..':(transaction.xid) }}</td>-->
+                  <!--<td>{{transaction.threadName}}</td>-->
+                  <!--<td>{{transaction.beginTime}}</td>-->
+                  <td>{{transaction.status}}</td>
+                  <td>{{transaction.wlsStatus}}</td>
+                  <td>{{transaction.javaThreadState}}</td>
+                  <td><ngbd-modal-basic>{{transaction.stackTrace}}</ngbd-modal-basic></td>
+                  <td>{{transaction.extraInfo}}</td>
+                  <td>{{transaction.startedTimeMillis}}</td>
+                  <!--<td>{{transaction.workManagerType}}</td>-->
+                  <!--<td>{{transaction.workManager}}</td>-->
+                  <!--<td>{{transaction.poolNumber}}</td>-->
+                  <!--<td>{{transaction.started}}</td>-->
+                  <!--<td>{{transaction.scheduled}}</td>-->
+                  <td>{{transaction.simpleClassName}}</td>
+                  <td>{{transaction.method}}({{transaction.arguments}})</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
