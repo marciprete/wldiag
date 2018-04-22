@@ -1,7 +1,7 @@
 package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
-import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetailProjection;
 import it.senape.wldiag.jpa.projection.DiagnosticImageProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by michele.arciprete on 15-Dec-17.
@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface DiagnosticImageRepository extends PagingAndSortingRepository<DiagnosticImage, Long> {
 
-    DiagnosticImage findByFileName(String fileName);
+    Optional<DiagnosticImage> findByFileName(String fileName);
 
     DiagnosticImage findByFileNameAndCustomerId(String fileName, Long customerId);
 
@@ -71,6 +71,6 @@ public interface DiagnosticImageRepository extends PagingAndSortingRepository<Di
             "inner join jvm on jvm.diagnostic_image_id = di.id " +
             "where di.id = :diagnosticImageId",
     nativeQuery = true)
-    DiagnosticImageDetail findDiagnosticImageDetails(@Param("diagnosticImageId") Long diagnosticImageId);
+    DiagnosticImageDetailProjection findDiagnosticImageDetails(@Param("diagnosticImageId") Long diagnosticImageId);
 
 }

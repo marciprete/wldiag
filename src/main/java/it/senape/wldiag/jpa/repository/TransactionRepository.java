@@ -1,7 +1,8 @@
 package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.jta.Transaction;
-import it.senape.wldiag.jpa.projection.ThreadedTransaction;
+import it.senape.wldiag.jpa.projection.ThreadedTransactionProjection;
+import it.senape.wldiag.jpa.projection.TransactionProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,11 +18,6 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends PagingAndSortingRepository<Transaction, Long> {
 
-    //    @Query(value = "select * from transaction t " +
-//            "inner join jta j on j.id = t.jta_id " +
-//            "left outer join property p on p.transaction_id=t.id " +
-//            "where jta_id = 2",
-//    nativeQuery = true)
     @Query(value = "select distinct t from Transaction t "
             + "inner join fetch t.jta jta "
             + "inner join fetch t.activeThread at "
@@ -72,7 +67,23 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
                     "inner join jta on jta.id=t.jta_id " +
                     "where jta.diagnostic_image_id = :diagnosticImageId",
             nativeQuery=true)
-    Page<ThreadedTransaction> findAllThreadedTransaction(@Param("diagnosticImageId") Long diagnosticImageId, Pageable pageRequest);
+    Page<ThreadedTransactionProjection> findAllThreadedTransaction(@Param("diagnosticImageId") Long diagnosticImageId, Pageable pageRequest);
 
 
+    @Query(value = "select t.xid, t.status, t.begin_time as beginTime, " +
+            "it.name as threadName, it.wls_status as wlsStatus, " +
+            "inner_p.class_name className, inner_p.method, inner_p.arguments " +
+            "from transaction t " +
+            "inner join internal_thread it on it.transaction_id = t.id " +
+            "left join " +
+            "(select * from property p " +
+            "inner join ejb_transaction et on et.ejb_transaction_id=p.property_id) inner_p on inner_p.transaction_id=t.id"
+    ,countQuery = "select count(t.xid) " +
+            "from transaction t " +
+            "inner join internal_thread it on it.transaction_id = t.id " +
+            "left join " +
+            "(select * from property p " +
+            "inner join ejb_transaction et on et.ejb_transaction_id=p.property_id) inner_p on inner_p.transaction_id=t.id"
+            ,nativeQuery = true)
+    Page<TransactionProjection> retrieveAll(Pageable pageRequest);
 }

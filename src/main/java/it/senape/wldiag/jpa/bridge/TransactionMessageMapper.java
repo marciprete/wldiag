@@ -7,11 +7,13 @@ import it.senape.wldiag.dto.ResourceDto;
 import it.senape.wldiag.jpa.model.jta.EjbTransactionProperty;
 import it.senape.wldiag.jpa.model.jta.InternalThread;
 import it.senape.wldiag.jpa.model.jta.Transaction;
+import it.senape.wldiag.jpa.projection.TransactionProjection;
 import it.senape.wldiag.message.TransactionMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
@@ -130,5 +132,27 @@ public final class TransactionMessageMapper {
     public static Page<TransactionMessage> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Transaction> source) {
         List<TransactionMessage> dtos = mapEntitiesIntoDTOs(source.getContent());
         return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+    }
+
+    public static Page<TransactionMessage> mapProjectionPageIntoDTOPage(Page<TransactionProjection> source, Pageable pageRequest) {
+        List<TransactionMessage> dtos = mapProjectionsIntoDTOs(source.getContent());
+        return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+    }
+
+    private static List<TransactionMessage> mapProjectionsIntoDTOs(List<TransactionProjection> content) {
+        List<TransactionMessage> dtos = new ArrayList<>();
+        content.forEach(e -> dtos.add(mapProjectionIntoDTO(e)));
+        return dtos;
+    }
+
+    private static TransactionMessage mapProjectionIntoDTO(TransactionProjection projection) {
+        TransactionMessage message = new TransactionMessage();
+        message.setXid(projection.getXID());
+        message.setBeginTime(projection.getBeginTime());
+        message.setStatus(projection.getStatus());
+        message.setThreadName(projection.getThreadName());
+        message.setWlsStatus(projection.getWlsStatus());
+        message.setEjbTransactionSignature(projection.getEjbTransactionSignature());
+        return message;
     }
 }

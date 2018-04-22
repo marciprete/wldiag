@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.jpa.Impl;
+package it.senape.wldiag.service.jpa.impl;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.dto.JtaDto;
@@ -8,7 +8,7 @@ import it.senape.wldiag.dto.workmanager.WorkManagerDto;
 import it.senape.wldiag.jpa.bridge.DiagnosticImageProjectionMapper;
 import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
-import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetailProjection;
 import it.senape.wldiag.jpa.projection.DiagnosticImageProjection;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
@@ -26,7 +26,6 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,7 +35,7 @@ import java.util.Optional;
 @Transactional
 public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
-    private final static Logger logger = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
 
 
     private CustomerRepository customerRepository;
@@ -122,8 +121,17 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
     }
 
     @Override
-    public DiagnosticImageDetail getDiagnosticImageDetails(Long diagnosticImageId) {
+    public DiagnosticImageDetailProjection getDiagnosticImageDetails(Long diagnosticImageId) {
         return diagnosticImageRepository.findDiagnosticImageDetails(diagnosticImageId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DiagnosticImageDto findByFileName(String fileName) {
+        if (fileName != null) {
+            return getDummyDto(diagnosticImageRepository.findByFileName(fileName));
+        }
+        return new DiagnosticImageDto();
     }
 
     @Override
@@ -133,13 +141,19 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
     @Override
     @Transactional(readOnly = true)
-    public DiagnosticImageDto findById(Long id) {
-        Optional<DiagnosticImage> di = diagnosticImageRepository.findById(id);
+    public DiagnosticImageDto findById(Long diagnosticImageId) {
+        if (diagnosticImageId != null) {
+            return getDummyDto(diagnosticImageRepository.findById(diagnosticImageId));
+        }
+        return new DiagnosticImageDto();
+    }
+
+    private DiagnosticImageDto getDummyDto(Optional<DiagnosticImage> di) {
         DiagnosticImageDto dto = new DiagnosticImageDto();
         if (di.isPresent()) {
-            DiagnosticImage _di = di.get();
-            dto.setAcquisitionTime(_di.getAcquisitionTime());
-            dto.setFileName(_di.getFileName());
+            DiagnosticImage dummyDI = di.get();
+            dto.setAcquisitionTime(dummyDI.getAcquisitionTime());
+            dto.setFileName(dummyDI.getFileName());
         }
         return dto;
     }

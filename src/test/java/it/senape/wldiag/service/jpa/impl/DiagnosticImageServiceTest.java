@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.jpa.Impl;
+package it.senape.wldiag.service.jpa.impl;
 
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.dto.JtaDto;
@@ -6,6 +6,7 @@ import it.senape.wldiag.dto.jdbc.JdbcResourcePoolDto;
 import it.senape.wldiag.dto.jvm.JvmDto;
 import it.senape.wldiag.dto.workmanager.WorkManagerDto;
 import it.senape.wldiag.fixtures.CustomerFixtures;
+import it.senape.wldiag.fixtures.DiagnosticImageFixtures;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.repository.CustomerRepository;
 import it.senape.wldiag.jpa.repository.DiagnosticImageRepository;
@@ -16,13 +17,19 @@ import it.senape.wldiag.service.jpa.WorkManagerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by michele.arciprete on 30-Mar-18
@@ -56,11 +63,110 @@ class DiagnosticImageServiceTest {
                 jvmService);
     }
 
-//    @Nested
-//    class Retrieve {
-//
-//
-//    }
+    @Nested
+    class FindById {
+
+        @Nested
+        class WhenIdIsValid {
+
+            @Test
+            public void shouldReturnDiagnosticImage() throws Exception {
+                Long id = 1L;
+                DiagnosticImage diagnosticImage = new DiagnosticImage();
+                diagnosticImage.setFileName("TEST");
+                LocalDateTime now = LocalDateTime.now();
+                diagnosticImage.setAcquisitionTime(now);
+                when(diagnosticImageRepository.findById(id)).thenReturn(Optional.of(diagnosticImage));
+
+                DiagnosticImageDto dto = service.findById(id);
+                assertEquals(now, dto.getAcquisitionTime());
+                assertEquals("TEST", dto.getFileName());
+
+                verify(diagnosticImageRepository, times(1))
+                        .findById(id);
+            }
+        }
+
+        @Nested
+        class WhenIdIsNull {
+
+            @Test
+            public void shouldReturnAnEmptyDto() throws Exception {
+                Long id = 5L;
+                DiagnosticImageDto dto = service.findById(id);
+                assertNotNull(dto);
+                assertEquals(null, dto.getImageId());
+                verify(diagnosticImageRepository, times(1))
+                        .findById(id);
+            }
+        }
+
+        @Nested
+        class WhenIdDoesntExist {
+
+            @Test
+            public void shouldReturnAnEmptyDto() throws Exception {
+                Long id = null;
+                when(diagnosticImageRepository.findById(id)).thenReturn(Optional.empty());
+                DiagnosticImageDto dto = service.findById(id);
+                assertNotNull(dto);
+                assertEquals(null, dto.getImageId());
+            }
+        }
+    }
+
+    @Nested
+    class FindLatest {
+
+        PageRequest pageRequest;
+
+        @Nested
+        class WhenDefaultPageSort {
+
+            @BeforeEach()
+            public void setDefaultPageSort() {
+                pageRequest = PageRequest.of(0, 10);
+            }
+
+            @Nested
+            class WhenImagesExist {
+
+                @Test
+                public void shoudlReturnAList() throws Exception {
+                    when(diagnosticImageRepository.retrieveAll(isA(Pageable.class)))
+                            .thenReturn(
+                                    new PageImpl<>(Arrays.asList(DiagnosticImageFixtures.createProjection())));
+
+                    Page<DiagnosticImageDto> projections = service.findLatest(pageRequest);
+
+                    assertTrue(projections.hasContent());
+                    verify(diagnosticImageRepository).retrieveAll(pageRequest);
+                }
+            }
+        }
+
+        @Nested
+        class WhenSortingByFileName {
+            @BeforeEach()
+            public void setSort() {
+                pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "file_name");
+            }
+
+            @Test
+            public void shoudlReturnASortedList() throws Exception {
+                when(diagnosticImageRepository.retrieveAll(isA(Pageable.class)))
+                        .thenReturn(
+                                new PageImpl<>(Arrays.asList(DiagnosticImageFixtures.createProjection())));
+
+                Page<DiagnosticImageDto> projections = service.findLatest(pageRequest);
+
+                assertTrue(projections.hasContent());
+                verify(diagnosticImageRepository).retrieveAll(pageRequest);
+            }
+        }
+
+    }
+
 
 
     @Nested

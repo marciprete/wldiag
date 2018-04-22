@@ -25,6 +25,10 @@ public class TransactionMessage implements Serializable {
     private Integer repliesOwedOthers;//="0"
     private Boolean retry;//="false"
 
+    private String threadName;
+    private String wlsStatus;
+    private String ejbTransactionSignature;
+
     private Set<PropertyDto> localProperties = new LinkedHashSet<>();
     private Set<PropertyDto> globalProperties = new LinkedHashSet<>();
     private Set<ServerDto> servers = new LinkedHashSet<>();
@@ -150,5 +154,29 @@ public class TransactionMessage implements Serializable {
 
     public void setResources(Set<ResourceDto> resources) {
         this.resources = resources;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
+    public String getWlsStatus() {
+        return wlsStatus;
+    }
+
+    public void setWlsStatus(String wlsStatus) {
+        this.wlsStatus = wlsStatus;
+    }
+
+    public String getEjbTransactionSignature() {
+        return ejbTransactionSignature;
+    }
+
+    public void setEjbTransactionSignature(String ejbTransactionSignature) {
+        this.ejbTransactionSignature = ejbTransactionSignature;
     }
 }

@@ -2,9 +2,9 @@ package it.senape.wldiag.controller;
 
 import it.senape.wldiag.jpa.bridge.TransactionMessageMapper;
 import it.senape.wldiag.jpa.model.jta.Transaction;
-import it.senape.wldiag.jpa.projection.ThreadedTransaction;
-import it.senape.wldiag.jpa.projection.TopClass;
-import it.senape.wldiag.jpa.projection.TopMethod;
+import it.senape.wldiag.jpa.projection.ThreadedTransactionProjection;
+import it.senape.wldiag.jpa.projection.TopClassProjection;
+import it.senape.wldiag.jpa.projection.TopMethodProjection;
 import it.senape.wldiag.jpa.repository.TransactionRepository;
 import it.senape.wldiag.message.DiagnosticImagesTransactionsMessage;
 import it.senape.wldiag.message.TransactionMessage;
@@ -51,33 +51,26 @@ public class TransactionController {
     @ResponseBody
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public Page<TransactionMessage> list(Pageable pageRequest) {
-        Page<Transaction> entities = transactionRepository.findAll(pageRequest);
-        return TransactionMessageMapper.mapEntityPageIntoDTOPage(pageRequest, entities);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/OLDdiagnosticImage/{diagnosticImageId}", method = RequestMethod.GET)
-    public ResponseEntity<DiagnosticImagesTransactionsMessage> getTransactions(@PathVariable("diagnosticImageId") Long diId) {
-        return ResponseEntity.ok().body(transactionService.getDiagnosticImageTransactions(diId));
+        return transactionService.findAll(pageRequest);
     }
 
     @ResponseBody
     @RequestMapping(value = "diagnosticImage/{diagnosticImageId}", method = RequestMethod.GET)
-    public ResponseEntity<Page<ThreadedTransaction>> getTransactionsByDiagnosticImageId(@PathVariable("diagnosticImageId") Long diId,
-                                                                                              Pageable pageRequest) {
-        Page<ThreadedTransaction> allThreadedTransaction = transactionService.findAllThreadedTransaction(diId,pageRequest);
+    public ResponseEntity<Page<ThreadedTransactionProjection>> getTransactionsByDiagnosticImageId(@PathVariable("diagnosticImageId") Long diId,
+                                                                                                  Pageable pageRequest) {
+        Page<ThreadedTransactionProjection> allThreadedTransaction = transactionService.findAllThreadedTransaction(diId,pageRequest);
         return ResponseEntity.ok().body(allThreadedTransaction);
     }
 
     @ResponseBody
     @RequestMapping(value = "/topClasses", method=RequestMethod.GET)
-    public ResponseEntity<List<TopClass>> getTopClasses() {
+    public ResponseEntity<List<TopClassProjection>> getTopClasses() {
         return ResponseEntity.ok(transactionService.getTopClasses());
     }
 
     @ResponseBody
     @RequestMapping(value = "/topMethods", method=RequestMethod.GET)
-    public ResponseEntity<List<TopMethod>> getTopMethods() {
+    public ResponseEntity<List<TopMethodProjection>> getTopMethods() {
         return ResponseEntity.ok(transactionService.getTopMethods());
     }
 
@@ -85,5 +78,13 @@ public class TransactionController {
     @RequestMapping(value = "/count", method=RequestMethod.GET)
     public long count() {
         return transactionService.count();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/threads", method=RequestMethod.GET)
+    public String findAllThreads() {
+//        return transactionService.findAllThreads();
+        return null;
     }
 }

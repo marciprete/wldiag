@@ -22,4 +22,12 @@ public class Util {
         }
         return dest;
     }
+
+    public static String extractWlsStatus(String thread) {
+        String wlsStatus = null;
+        if (thread.startsWith("[")) {
+            wlsStatus = thread.substring(thread.indexOf("[") + 1, thread.indexOf("]"));
+        }
+        return wlsStatus;
+    }
 }

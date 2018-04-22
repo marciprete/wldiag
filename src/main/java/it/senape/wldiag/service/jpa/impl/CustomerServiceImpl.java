@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.jpa.Impl;
+package it.senape.wldiag.service.jpa.impl;
 
 import it.senape.wldiag.dto.CustomerDto;
 import it.senape.wldiag.jpa.bridge.CustomerMapper;

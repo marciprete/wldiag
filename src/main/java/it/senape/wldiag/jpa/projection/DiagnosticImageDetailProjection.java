@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 /**
  * Created by michele.arciprete on 10-Apr-18
  */
-public interface DiagnosticImageDetail {
+public interface DiagnosticImageDetailProjection {
 
     @Value("#{target.file_name}") String getFileName();
     @Value("#{target.acquisition_time}") LocalDateTime getAcquisitionTime();

@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.jpa.Impl;
+package it.senape.wldiag.service.jpa.impl;
 
 import it.senape.wldiag.jpa.model.jta.Server;
 import it.senape.wldiag.jpa.repository.ServerRepository;

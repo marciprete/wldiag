@@ -16,7 +16,6 @@ public class Resource extends AbstractEntity<Long> {
     private String name;//="EBOOKING_DATASOURCE_ebooking"
     private String state;//="started"
 
-    @NaturalId
     private String xid;//="BEA1-1E47ED1E038FAAAEA9A1-45424F4F4B494E475F44415441534F555243455F65626F6F6B696E67"
     private Boolean busy;//="false"
 

@@ -9,6 +9,7 @@ import it.senape.wldiag.jpa.model.jvm.ThreadDump;
 import it.senape.wldiag.jpa.model.jvm.Work;
 import it.senape.wldiag.jpa.repository.InternalThreadRepository;
 import it.senape.wldiag.jpa.repository.JvmRepository;
+import it.senape.wldiag.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by michele.arciprete on 05-Apr-18
@@ -32,6 +34,8 @@ import java.util.regex.Pattern;
 public class JvmService {
 
     private final static Logger logger = LoggerFactory.getLogger(JvmService.class);
+    private static final String SIMPLE_THREAD_PATTERN = "([\"])((?:(?!\\1).)+)\\1\\sId=([0-9]+)\\s(.*)";
+    private static final String ADVANCED_THREAD_PATTERN = "([\"])((?:(?!\\1).)+)\\1(?:\\s#([0-9]+))?(?:\\s(daemon))?(?:\\sprio=([0-9-]+))?(?:\\sos_prio=([0-9-]+))?\\s(?:tid=([\\w]+))\\s(?:nid=([\\w]+))\\s([\\w\\s\\.\\(\\)]+)(?:\\[([\\w]+)\\])?";
 
     private JvmRepository jvmRepository;
     private InternalThreadRepository internalThreadRepository;
@@ -53,19 +57,21 @@ public class JvmService {
 
         Map<String, ThreadDump> threadDumpMap = extractThreadDumps(jvmDto.getThreadDump());
         Map<String, ExecutionDetails> executionDetailsMap = extractExecutionDetails(jvmDto.getThreadRequestExecutionDetails());
-        Map<String, InternalThread> internalThreadMap = getInternalThreadMap(diagnosticImage.getId(), threadDumpMap.keySet());
 
-        for (String threadName : threadDumpMap.keySet()) {
-            ThreadDump threadDump = threadDumpMap.get(threadName);
+        Set<String> names = threadDumpMap.values().stream().map(ThreadDump::getThreadName).collect(Collectors.toSet());
+        Map<String, InternalThread> internalThreadMap = getInternalThreadMap(diagnosticImage.getId(), names);
+
+        for (String key : threadDumpMap.keySet()) {
+            ThreadDump threadDump = threadDumpMap.get(key);
             jvm.getThreadDumpList().add(threadDump);
             threadDump.setJvm(jvm);
 
-            InternalThread internalThread = internalThreadMap.get(threadName);
+            InternalThread internalThread = internalThreadMap.get(key);
             if(internalThread != null) {
                 threadDump.setInternalThread(internalThread);
             }
 
-            ExecutionDetails executionDetails = executionDetailsMap.get(threadName);
+            ExecutionDetails executionDetails = executionDetailsMap.get(key);
             if(executionDetails != null) {
                 threadDump.setExecutionDetails(executionDetails);
                 executionDetails.setThreadDump(threadDump);
@@ -94,48 +100,150 @@ public class JvmService {
         Map<String, ThreadDump> threadDumpMap = new HashMap<>();
         try {
             String line = null;
-            StringBuffer sb = new StringBuffer();
-            Boolean isThePreviousLineEmpty = false;
-
             ThreadDump td = new ThreadDump();
             while((line = reader.readLine()) !=null ) {
                 if(line.startsWith("\"")) {
-                    sb = new StringBuffer();
-                    isThePreviousLineEmpty = false;
-//                    Pattern pattern = Pattern.compile("^\"(.*)\"\\s\\w+=([0-9]+)\\s(.*)");
-                    Pattern pattern = Pattern.compile("([\"])((?:(?!\\1).)+)\\1\\sId=([0-9]+)\\s(.*)");
-                    Matcher matcher = pattern.matcher(line);
-                    while (matcher.find()) {
-                        String name = matcher.group(2);
-                        String id = matcher.group(3);
-                        String state = matcher.group(4);
-                        td = new ThreadDump();
-                        td.setThreadId(Long.parseLong(id));
-                        td.setThreadName(name);
-                        td.setState(state);
-                    }
-                } else if (line.startsWith("\t")) {
-                    if(isThePreviousLineEmpty) {
-                        String extraInfo = line.trim();
-                        extraInfo += reader.readLine();
-                        td.setExtraInfo(extraInfo);
-                    } else {
-                        sb.append(line);
-                    }
-                } else if (line.isEmpty()) {
-
-                    if (!isThePreviousLineEmpty) {
-                        isThePreviousLineEmpty=true;
-                    } else {
-                        td.setStackTrace(sb.toString());
-                        threadDumpMap.put(td.getThreadName(), td);
-                    }
+                    td = initThreadDump(line, reader);
+                    String key = td.getTid() != null ? td.getTid() : td.getThreadName();
+                    threadDumpMap.put(key, td);
+                } else if (!line.isEmpty()) {
+                    addStackTrace(td, line, reader);
                 }
+
             }
         } catch (IOException e) {
             logger.error("Failed to extract thread dumps", e);
         }
         return threadDumpMap;
+    }
+
+    private void addStackTrace(ThreadDump td, String line, BufferedReader reader) throws IOException {
+        if(td.getTid() != null) {
+            addExtendedStackTrace(td, line, reader);
+        } else {
+            addSimpleStackTrace(td, line, reader);
+        }
+    }
+
+    private void addSimpleStackTrace(ThreadDump td, String line, BufferedReader reader) throws IOException {
+        Boolean isThePreviousLineEmpty = false;
+        StringBuffer sb = new StringBuffer();
+        Boolean hasLine = true;
+        while(line != null && hasLine ) {
+            if (line.startsWith("\t")) {
+                if (isThePreviousLineEmpty) {
+                    String extraInfo = line.trim();
+                    extraInfo += reader.readLine();
+                    td.setExtraInfo(extraInfo);
+                    hasLine = false;
+                } else {
+                    sb.append(line);
+                    line = reader.readLine();
+                }
+            } else {
+                if (!isThePreviousLineEmpty) {
+                    isThePreviousLineEmpty = true;
+                    td.setStackTrace(sb.toString());
+                    line = reader.readLine();
+                } else {
+                    hasLine=false;
+                }
+            }
+
+        }
+
+    }
+
+    private void addExtendedStackTrace(ThreadDump td, String line, BufferedReader reader) throws IOException {
+        Boolean hasLine = true;
+        StringBuffer sb = new StringBuffer();
+        while(hasLine) {
+            if (line.startsWith("\t")) {
+                sb.append(line);
+                if(line.contains("&lt;")) {
+                    String referencedTid = line.substring(line.lastIndexOf("0x"), line.lastIndexOf("&gt;"));
+                    td.setReferencedTid(referencedTid);
+                }
+                line = reader.readLine();
+            } else {
+                td.setStackTrace(sb.toString());
+                hasLine = false;
+            }
+        }
+    }
+
+
+    private ThreadDump initThreadDump(String line, BufferedReader reader) throws IOException {
+        if (line.contains("tid=")) {
+            return buildExtendedThreadDump(line, reader);
+        } else {
+            return buildSimpleThreadDump(line);
+        }
+
+    }
+
+    private ThreadDump buildSimpleThreadDump(String line) {
+        ThreadDump td = new ThreadDump();
+        Pattern pattern = Pattern.compile(SIMPLE_THREAD_PATTERN);
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String name = matcher.group(2);
+            String id = matcher.group(3);
+            String state = matcher.group(4);
+            td = new ThreadDump();
+            td.setThreadId(Long.parseLong(id));
+            td.setThreadName(name);
+            td.setJavaThreadState(state);
+            td.setWlsStatus(Util.extractWlsStatus(name));
+        }
+        return td;
+    }
+
+    private ThreadDump buildExtendedThreadDump(String line, BufferedReader reader) throws IOException {
+        ThreadDump td = new ThreadDump();
+        Pattern pattern = Pattern.compile(ADVANCED_THREAD_PATTERN);
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String name = matcher.group(2);
+            String id = matcher.group(3);
+            String threadType = matcher.group(4);
+            String prio = matcher.group(5);
+            String osPrio = matcher.group(6);
+            String tid = matcher.group(7);
+            String nid = matcher.group(8);
+            String status = matcher.group(9);
+            String onCondition = matcher.group(10);
+
+
+//            //if thread name is of type Timer-0, or Thread-39, we add the #id to avoid non-unique names.
+//            //this assumes that the thread-request-execution-details tag will never contain one of these threads
+//            if (name.matches("Timer-[0-9]+") || name.matches("Thread-[0-9]+")) { name += " #" +id;}
+
+            td.setThreadName(name);
+            if (id != null) { td.setThreadId(Long.parseLong(id));}
+            td.setThreadType(threadType);
+            td.setPrio(prio);
+            td.setOsPrio(osPrio);
+            td.setTid(tid);
+            td.setNid(nid);
+            td.setStatus(status);
+            td.setOnCondition(onCondition);
+            td.setWlsStatus(Util.extractWlsStatus(name));
+
+            String statusLine = reader.readLine();
+            String[] javaState = statusLine.split("java.lang.Thread.State: ");
+
+            if(javaState.length == 2) {
+                String[] stateArray = javaState[1].split("\\s\\(");
+                String javaThreadState = stateArray[0];
+                if(stateArray.length == 2) {
+                    String stateInformation = stateArray[1].substring(0, stateArray[1].lastIndexOf(")"));
+                    td.setStateInformation(stateInformation);
+                }
+                td.setJavaThreadState(javaThreadState);
+            }
+        }
+        return td;
     }
 
     public Map<String, ExecutionDetails> extractExecutionDetails(String executionDetailsString) {
@@ -201,4 +309,12 @@ public class JvmService {
         }
         return work;
     }
+
+    public static void main(String[] args) {
+        String line = "- parking to wait for  &lt;0x00000003cfc63500&gt; (a";
+        String referencedTid = line.substring(line.lastIndexOf("0x"), line.lastIndexOf("&gt;"));
+        System.out.println(referencedTid);
+    }
+
+
 }

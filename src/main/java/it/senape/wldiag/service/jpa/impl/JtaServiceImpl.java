@@ -1,4 +1,4 @@
-package it.senape.wldiag.service.jpa.Impl;
+package it.senape.wldiag.service.jpa.impl;
 
 import it.senape.wldiag.dto.InternalThreadDto;
 import it.senape.wldiag.dto.JtaDto;
@@ -11,6 +11,7 @@ import it.senape.wldiag.jpa.repository.JtaRepository;
 import it.senape.wldiag.jpa.repository.ServerRepository;
 import it.senape.wldiag.message.JtaMessage;
 import it.senape.wldiag.service.jpa.JtaService;
+import it.senape.wldiag.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -170,16 +171,12 @@ public class JtaServiceImpl implements JtaService {
         while (matcher.find()) {
             String thread = matcher.group(1);
 
-            String wlsStatus = null;
-            if (thread.startsWith("[")) {
-                wlsStatus = thread.substring(thread.indexOf("[") + 1, thread.indexOf("]"));
-            }
             String[] elements = thread.split(",");
             String name = elements[0];
             String poolNumber = elements[1];
             String type = elements[2];
             InternalThreadDto internalThreadDto = new InternalThreadDto();
-            internalThreadDto.setWlsStatus(wlsStatus);
+            internalThreadDto.setWlsStatus(Util.extractWlsStatus(thread));
             internalThreadDto.setName(name);
             internalThreadDto.setPoolNumber(Integer.parseInt(poolNumber));
             internalThreadDto.setType(type);

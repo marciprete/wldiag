@@ -3,7 +3,7 @@ package it.senape.wldiag.controller;
 import it.senape.wldiag.config.UrlMappings;
 import it.senape.wldiag.dto.DiagnosticImageDto;
 import it.senape.wldiag.exceptions.StorageException;
-import it.senape.wldiag.jpa.projection.DiagnosticImageDetail;
+import it.senape.wldiag.jpa.projection.DiagnosticImageDetailProjection;
 import it.senape.wldiag.service.filesystem.DiagnosticImageResource;
 import it.senape.wldiag.service.filesystem.DiagnosticImageXmlService;
 import it.senape.wldiag.service.jpa.DiagnosticImageService;
@@ -58,12 +58,21 @@ public class DiagnosticImageController {
         this.diagnosticImageXmlService = diagnosticImageXmlService;
     }
 
+    @ResponseBody
+    @RequestMapping(value = UrlMappings.SHOW + "/n/{naturalId}", method = RequestMethod.GET)
+    public ResponseEntity<DiagnosticImageDto> showDetailsByNaturalId(@PathVariable("naturalId") String fileName) {
+        if(fileName!=null) {
+            return ResponseEntity.ok(diagnosticImageService.findByFileName(fileName));
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
     @ResponseBody
     @RequestMapping(value = UrlMappings.SHOW + "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<DiagnosticImageDetail> show(@PathVariable("id") Long id) {
+    public ResponseEntity<DiagnosticImageDetailProjection> show(@PathVariable("id") Long id) {
         logger.trace(">> Show diagnostic image with id: {}", id);
-        DiagnosticImageDetail dto = diagnosticImageService.getDiagnosticImageDetails(id);
+        DiagnosticImageDetailProjection dto = diagnosticImageService.getDiagnosticImageDetails(id);
         if (dto != null && dto.getFileName()!=null) {
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }

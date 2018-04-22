@@ -5,6 +5,7 @@ import it.senape.wldiag.jpa.model.jdbc.JdbcResourcePool;
 import it.senape.wldiag.jpa.model.jta.Jta;
 import it.senape.wldiag.jpa.model.jvm.Jvm;
 import it.senape.wldiag.jpa.model.workmanager.WorkManager;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class DiagnosticImage extends AbstractEntity<Long> {
 
-    @Column(nullable = false)
+    @NaturalId
     private String fileName;
 
     private LocalDateTime acquisitionTime;

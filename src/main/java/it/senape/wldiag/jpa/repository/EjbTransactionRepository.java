@@ -1,8 +1,8 @@
 package it.senape.wldiag.jpa.repository;
 
 import it.senape.wldiag.jpa.model.jta.EjbTransactionProperty;
-import it.senape.wldiag.jpa.projection.TopClass;
-import it.senape.wldiag.jpa.projection.TopMethod;
+import it.senape.wldiag.jpa.projection.TopClassProjection;
+import it.senape.wldiag.jpa.projection.TopMethodProjection;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -22,7 +22,7 @@ public interface EjbTransactionRepository extends PagingAndSortingRepository<Ejb
             "order by hits desc " +
             "limit 5",
     nativeQuery = true)
-    public List<TopMethod> getTopMethods();
+    public List<TopMethodProjection> getTopMethods();
 
     @Query(value = "select class_name fqnClassName, " +
             "count(*) hits " +
@@ -31,5 +31,5 @@ public interface EjbTransactionRepository extends PagingAndSortingRepository<Ejb
             "order by hits desc " +
             "limit 5",
             nativeQuery = true)
-    public List<TopClass> getTopClasses();
+    public List<TopClassProjection> getTopClasses();
 }
