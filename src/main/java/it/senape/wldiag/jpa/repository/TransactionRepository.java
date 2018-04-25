@@ -49,19 +49,19 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
     @Query(value = "select " +
             "t.xid, t.status, t.begin_time, " +
             "ejb.class_name as className, ejb.method, ejb.arguments, " +
-            "it.name, it.pool_number, it.wls_status, " +
-            "td.state, td.stack_trace, td.extra_info as extraInfo, " +
+            "it.name, it.pool_number, it.wls_status wlsStatus, " +
+            "td.status as javaThreadState " +
+            ",td.stack_trace as stackTrace, td.extra_info as extraInfo, " +
             "ed.ecid " +
-            ",w.work_manager, w.scheduled, w.started, w.started_time_millis as startedTimeMillis, w.type " +
-//            ", w.started, w.scheduled, w.started_time_millis " +
+            ",w.work_manager workManager, w.scheduled, w.started, w.started_time_millis as startedTimeMillis, w.type workManagerType " +
             "from transaction t " +
             "inner join jta on jta.id=t.jta_id " +
             "left outer join ejb_transaction ejb on ejb.ejb_transaction_id=t.id " +
             "inner join diagnostic_image di on di.id=jta.diagnostic_image_id " +
-            "inner join internal_thread it on it.transaction_id=t.id " +
-            "inner join thread_dump td on td.internal_thread_id=it.id " +
-            "inner join execution_details ed on ed.thread_dump_id=td.id " +
-            "inner join work w on ed.id=w.execution_details_id " +
+            "left outer join internal_thread it on it.transaction_id=t.id " +
+            "left outer join thread_dump td on td.internal_thread_id=it.id " +
+            "left outer join execution_details ed on ed.thread_dump_id=td.id " +
+            "left outer join work w on ed.id=w.execution_details_id " +
             "where di.id= :diagnosticImageId",
             countQuery = "select count(*) from transaction t " +
                     "inner join jta on jta.id=t.jta_id " +
