@@ -17,6 +17,9 @@ public interface TransactionProjection {
     String getArguments();
 
     default String getEjbTransactionSignature() {
-        return getClassName().concat(".").concat(getMethod()).concat("(").concat(getArguments()).concat(")");
+        if (getClassName()!=null && getMethod() != null) {
+            return getClassName().concat(".").concat(getMethod()).concat("(").concat(getArguments()).concat(")");
+        }
+        return "";
     }
 }
