@@ -30,11 +30,12 @@ public interface DiagnosticImageRepository extends PagingAndSortingRepository<Di
      * @return a Page with the DiagnosticImage
      */
     @Query(value = "select di.id, di.file_name name, di.acquisition_time acquisitionTime, " +
-            "c.name as customerName, c.id as customerId from diagnostic_image di "
-           + "inner join customer c on c.id=di.customer_id"
+            "c.name as customerName, c.id as customerId, " +
+            "di.server_label serverLabel " +
+            "from diagnostic_image di " +
+            "inner join customer c on c.id=di.customer_id "
     ,countQuery = "select count(*) from diagnostic_image di"
-    ,nativeQuery = true
-    )
+    ,nativeQuery = true)
     Page<DiagnosticImageProjection> retrieveAll(Pageable pageable);
 
 

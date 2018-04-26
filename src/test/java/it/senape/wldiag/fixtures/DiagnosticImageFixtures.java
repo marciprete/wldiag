@@ -59,5 +59,10 @@ public class DiagnosticImageFixtures {
         public String getCustomerName() {
             return di.getCustomer().getName();
         }
+
+        @Override
+        public String getServerLabel() {
+            return di.getServerLabel();
+        }
     }
 }

@@ -91,6 +91,7 @@ public class DiagnosticImageController {
     @RequestMapping(value = UrlMappings.ADD, method = RequestMethod.POST)
     public ResponseEntity<Map<String, String>> upload(@RequestParam("diagnosticImage") List<MultipartFile> files,
                          @RequestParam("customerId") Long customerId,
+                         @RequestParam("serverLabel") String serverLabel,
                          RedirectAttributes redirectAttributes) {
         logger.trace("Upload {} file(s) for customer with id {}", files.size(), customerId);
         Map<String, String> results = new LinkedHashMap<>();
@@ -124,7 +125,7 @@ public class DiagnosticImageController {
                 Integer sec = Integer.parseInt(matcher.group(7));
 
                 LocalDateTime imageTime = LocalDateTime.of(year, month, day, hour, min, sec);
-                resource = new DiagnosticImageResource(path, serverName, imageTime);
+                resource = new DiagnosticImageResource(path, serverName, serverLabel, imageTime);
             }
 
             if(fileValid) {

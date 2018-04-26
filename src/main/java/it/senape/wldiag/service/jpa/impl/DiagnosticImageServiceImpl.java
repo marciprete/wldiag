@@ -37,7 +37,6 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
     private static final Logger logger = LoggerFactory.getLogger(DiagnosticImageServiceImpl.class);
 
-
     private CustomerRepository customerRepository;
     private DiagnosticImageRepository diagnosticImageRepository;
     private JtaService jtaService;
@@ -79,7 +78,7 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
             diagnosticImage = new DiagnosticImage();
             diagnosticImage.setCustomer(customer.get());
             diagnosticImage.setAcquisitionTime(diagnosticImageDto.getAcquisitionTime());
-            diagnosticImage.setServerName(diagnosticImageDto.getServerName());
+            diagnosticImage.setServerLabel(diagnosticImageDto.getServerLabel());
             diagnosticImage.setFileName(diagnosticImageDto.getFileName());
 
             try {
@@ -91,7 +90,10 @@ public class DiagnosticImageServiceImpl implements DiagnosticImageService {
 
                 JtaDto jtaDto = diagnosticImageDto.getJtaDto();
                 jtaDto.setDiagnosticImageId(diagnosticImageId);
+                jtaDto.setCustomerId(diagnosticImage.getCustomer().getId());
+                jtaDto.setServerLabel(diagnosticImageDto.getServer().getLabel());
                 jtaService.save(jtaDto);
+
 
                 JdbcResourcePoolDto jdbcResourcePoolDto = diagnosticImageDto.getJdbcResourcePool();
                 jdbcResourcePoolDto.setDiagnosticImageId(diagnosticImageId);

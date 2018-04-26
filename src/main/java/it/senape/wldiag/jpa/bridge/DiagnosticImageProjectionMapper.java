@@ -48,6 +48,7 @@ public final class DiagnosticImageProjectionMapper {
         dto.setFileName(entity.getName());
         dto.setCustomerId(entity.getCustomerId());
         dto.setCustomerName(entity.getCustomerName());
+        dto.setServerLabel(entity.getServerLabel());
         //TODO: manage server for DI
 //        Server server = entity.getServer();
 //        if (server != null) {

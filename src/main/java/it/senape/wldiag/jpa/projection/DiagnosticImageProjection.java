@@ -14,4 +14,6 @@ public interface DiagnosticImageProjection {
 
     Long getCustomerId();
     String getCustomerName();
+
+    String getServerLabel();
 }

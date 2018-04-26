@@ -1,50 +1,29 @@
 package it.senape.wldiag.dto;
 
+import lombok.Data;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 /**
  * Created by michele.arciprete on 14-Dec-17.
  */
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ServerDto implements Serializable {
 
+    @XmlAttribute
     private String url;//="ManagedServer_1+172.26.80.143:7011+ebooking+t3+"
+    @XmlAttribute
     private boolean syncRegistered;//="true"
+    @XmlAttribute
     private String state;//="active"
 
-    public String getUrl() {
-        return url;
-    }
+    @XmlTransient
+    private String serverLabel;
 
-    @XmlAttribute
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
-    public boolean isSyncRegistered() {
-        return syncRegistered;
-    }
-
-    @XmlAttribute
-    public void setSyncRegistered(boolean syncRegistered) {
-        this.syncRegistered = syncRegistered;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    @XmlAttribute
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @Override
-    public String toString() {
-        return "ServerDto{" +
-                "url='" + url + '\'' +
-                ", syncRegistered=" + syncRegistered +
-                ", state='" + state + '\'' +
-                '}';
-    }
 }

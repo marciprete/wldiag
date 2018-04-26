@@ -3,8 +3,11 @@ package it.senape.wldiag.jpa.model.internal;
 import it.senape.wldiag.jpa.model.AbstractEntity;
 import it.senape.wldiag.jpa.model.jdbc.JdbcResourcePool;
 import it.senape.wldiag.jpa.model.jta.Jta;
+import it.senape.wldiag.jpa.model.jta.Server;
 import it.senape.wldiag.jpa.model.jvm.Jvm;
 import it.senape.wldiag.jpa.model.workmanager.WorkManager;
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
 /**
  * Created by michele.arciprete on 15-Dec-17.
  */
+@Data
 @Entity
 public class DiagnosticImage extends AbstractEntity<Long> {
 
@@ -20,12 +24,15 @@ public class DiagnosticImage extends AbstractEntity<Long> {
     private String fileName;
 
     private LocalDateTime acquisitionTime;
-
-    private String serverName;
+    private String serverLabel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "server_id")
+//    private Server server;
 
     @OneToOne(fetch = FetchType.LAZY,
         cascade = CascadeType.ALL,
@@ -51,67 +58,4 @@ public class DiagnosticImage extends AbstractEntity<Long> {
             mappedBy = "diagnosticImage")
     private Jvm jvm;
 
-    public LocalDateTime getAcquisitionTime() {
-        return acquisitionTime;
-    }
-
-    public void setAcquisitionTime(LocalDateTime acquisitionTime) {
-        this.acquisitionTime = acquisitionTime;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public Jta getJta() {
-        return jta;
-    }
-
-    public void setJta(Jta jta) {
-        this.jta = jta;
-    }
-
-    public JdbcResourcePool getJdbcResourcePool() {
-        return jdbcResourcePool;
-    }
-
-    public void setJdbcResourcePool(JdbcResourcePool jdbcResourcePool) {
-        this.jdbcResourcePool = jdbcResourcePool;
-    }
-
-    public WorkManager getWorkManager() {
-        return workManager;
-    }
-
-    public void setWorkManager(WorkManager workManager) {
-        this.workManager = workManager;
-    }
-
-    public Jvm getJvm() {
-        return jvm;
-    }
-
-    public void setJvm(Jvm jvm) {
-        this.jvm = jvm;
-    }
 }

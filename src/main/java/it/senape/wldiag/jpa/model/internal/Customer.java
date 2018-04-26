@@ -1,6 +1,8 @@
 package it.senape.wldiag.jpa.model.internal;
 
 import it.senape.wldiag.jpa.model.AbstractEntity;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -8,7 +10,9 @@ import java.util.Set;
 /**
  * Created by michele.arciprete on 15-Dec-17.
  */
+@Data
 @Entity
+@ToString(exclude = {"diagnosticImages"})
 public class Customer extends AbstractEntity<Long> {
 
    private String name;
@@ -20,27 +24,4 @@ public class Customer extends AbstractEntity<Long> {
             fetch = FetchType.LAZY)
     private Set<DiagnosticImage> diagnosticImages;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Set<DiagnosticImage> getDiagnosticImages() {
-        return diagnosticImages;
-    }
-
-    public void setDiagnosticImages(Set<DiagnosticImage> diagnosticImages) {
-        this.diagnosticImages = diagnosticImages;
-    }
 }

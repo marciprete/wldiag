@@ -28,6 +28,8 @@ public final class TransactionMessageMapper {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionMessageMapper.class);
 
+    private TransactionMessageMapper() {}
+
     /**
      * Transforms the list of {@link Transaction} objects given as a method parameter
      * into a list of {@link TransactionMessage} objects and returns the created list.
@@ -88,7 +90,7 @@ public final class TransactionMessageMapper {
                     ejbTransactionDTO.setId(ejbTx.getId());
                     String className = ejbTx.getClassName();
                     ejbTransactionDTO.setFqnClassName(className);
-                    ejbTransactionDTO.setSimpleClassName(className.substring(className.lastIndexOf(".")));
+                    ejbTransactionDTO.setSimpleClassName(className.substring(className.lastIndexOf('.')));
                     ejbTransactionDTO.setMethod(ejbTx.getMethod());
                     ejbTransactionDTO.setArguments(ejbTx.getArguments());
                     dto.getEjbTransactions().add(ejbTransactionDTO);

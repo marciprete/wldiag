@@ -43,8 +43,8 @@ public class Converter {
                 EjbTransactionProperty ejbTransaction = new EjbTransactionProperty(property);
                 String fqn = matcher.group(1);
                 String args = matcher.group(2);
-                ejbTransaction.setClassName(fqn.substring(0,fqn.lastIndexOf(".")));
-                ejbTransaction.setMethod(fqn.substring(fqn.lastIndexOf(".")+1));
+                ejbTransaction.setClassName(fqn.substring(0,fqn.lastIndexOf('.')));
+                ejbTransaction.setMethod(fqn.substring(fqn.lastIndexOf('.')+1));
                 ejbTransaction.setArguments(args);
                 return ejbTransaction;
             }

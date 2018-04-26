@@ -4,7 +4,7 @@ export class DiagnosticImage {
   public acquisitionTime: Date;
   public customerName: string;
   public customerId: number;
-  // public serverName: string;
+  public serverLabel: string;
   // public serverId: number;
 
 }

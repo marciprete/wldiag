@@ -5,6 +5,7 @@ import it.senape.wldiag.dto.JtaDto;
 import it.senape.wldiag.dto.ServerDto;
 import it.senape.wldiag.jpa.bridge.Converter;
 import it.senape.wldiag.jpa.bridge.JtaMessageMapper;
+import it.senape.wldiag.jpa.model.internal.Customer;
 import it.senape.wldiag.jpa.model.internal.DiagnosticImage;
 import it.senape.wldiag.jpa.model.jta.*;
 import it.senape.wldiag.jpa.repository.JtaRepository;
@@ -22,9 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,30 +68,35 @@ public class JtaServiceImpl implements JtaService {
     }
 
 
-    private Jta convertJtaDtoToEntity(JtaDto dto) {
-        Jta entry = new Jta();
-        if (dto != null) {
-            entry.setAbandonTimeout(dto.getAbandonTimeout());
-            entry.setBeforeCompletionIterationLimit(dto.getBeforeCompletionIterationLimit());
-            entry.setCheckpointInterval(dto.getCheckpointInterval());
-            entry.setCompletionTimeout(dto.getCompletionTimeout());
-            entry.setDefaultTimeout(dto.getDefaultTimeout());
-            entry.setForgetHeuristics(dto.isForgetHeuristics());
-            entry.setLastCheckpointTime(Converter.fromLongToLocalDateTime(dto.getLastCheckpointTime()));
-            entry.setMaxTransactions(dto.getMaxTransactions());
-            entry.setMaxUniqueNameStatistics(dto.getMaxUniqueNameStatistics());
-            entry.setTlogStoreName(dto.getTlogStoreName());
-            entry.setHlogStoreName(dto.getHlogStoreName());
-            entry.setParallelXAEnabled(dto.isParallelXAEnabled());
-            entry.setTwoPhaseEnabled(dto.isTwoPhaseEnabled());
-            entry.setHealth(Health.valueOf(dto.getHealth().getHealthState().getState().toString()));
-            entry.setTransactionCount(dto.getTransactions().size());
+    private Jta convertJtaDtoToEntity(JtaDto jtaDto) {
+        Jta jtaEntry = new Jta();
+        if (jtaDto != null) {
+            jtaEntry.setAbandonTimeout(jtaDto.getAbandonTimeout());
+            jtaEntry.setBeforeCompletionIterationLimit(jtaDto.getBeforeCompletionIterationLimit());
+            jtaEntry.setCheckpointInterval(jtaDto.getCheckpointInterval());
+            jtaEntry.setCompletionTimeout(jtaDto.getCompletionTimeout());
+            jtaEntry.setDefaultTimeout(jtaDto.getDefaultTimeout());
+            jtaEntry.setForgetHeuristics(jtaDto.isForgetHeuristics());
+            jtaEntry.setLastCheckpointTime(Converter.fromLongToLocalDateTime(jtaDto.getLastCheckpointTime()));
+            jtaEntry.setMaxTransactions(jtaDto.getMaxTransactions());
+            jtaEntry.setMaxUniqueNameStatistics(jtaDto.getMaxUniqueNameStatistics());
+            jtaEntry.setTlogStoreName(jtaDto.getTlogStoreName());
+            jtaEntry.setHlogStoreName(jtaDto.getHlogStoreName());
+            jtaEntry.setParallelXAEnabled(jtaDto.isParallelXAEnabled());
+            jtaEntry.setTwoPhaseEnabled(jtaDto.isTwoPhaseEnabled());
+            jtaEntry.setHealth(Health.valueOf(jtaDto.getHealth().getHealthState().getState().toString()));
+            jtaEntry.setTransactionCount(jtaDto.getTransactions().size());
 
             DiagnosticImage diagnosticImage = new DiagnosticImage();
-            diagnosticImage.setId(dto.getDiagnosticImageId());
-            entry.setDiagnosticImage(diagnosticImage);
+            diagnosticImage.setId(jtaDto.getDiagnosticImageId());
+            jtaEntry.setDiagnosticImage(diagnosticImage);
 
-            dto.getTransactions().forEach(transactionDto -> {
+            Customer customer = new Customer();
+            customer.setId(jtaDto.getCustomerId());
+
+            Map<String, Server> serverMap = new HashMap<>();
+
+            jtaDto.getTransactions().forEach(transactionDto -> {
                 Transaction transaction = new Transaction();
                 transaction.setXid(transactionDto.getXid());
                 transaction.setState(transactionDto.getState());
@@ -128,18 +132,20 @@ public class JtaServiceImpl implements JtaService {
                     p.setTransaction(transaction);
                 });
 
-                entry.getTransactions().add(transaction);
-                transaction.setJta(entry);
+                jtaEntry.getTransactions().add(transaction);
+                transaction.setJta(jtaEntry);
 
-                transactionDto.getServers().forEach(serverDto -> {
-                    Server server = extractServerFromDto(serverDto);
-//                    if(server.isPresent()) {
-                    transaction.addServer(server, serverDto.isSyncRegistered(), serverDto.getState());
-//                    }
-                });
+
+                for(ServerDto serverDto : transactionDto.getServers()) {
+                    if(!serverMap.keySet().contains(serverDto.getUrl()) ) {
+                        serverDto.setServerLabel(jtaDto.getServerLabel());
+                        Server server = extractServerFromDto(serverDto, customer);
+                        transaction.addServer(server, serverDto.isSyncRegistered(), serverDto.getState());
+                        serverMap.put(serverDto.getUrl(),server);
+                    }
+                }
 
                 transactionDto.getResources().forEach(resourceDto -> {
-                    Map<String, Server> serverMap = new HashMap<>();
                     Resource resource = new Resource();
                     resource.setName(resourceDto.getName());
                     resource.setBusy(resourceDto.isBusy());
@@ -149,7 +155,7 @@ public class JtaServiceImpl implements JtaService {
                     for (ServerDto serverDto : resourceDto.getServers()) {
                         Server server = serverMap.get(serverDto.getUrl());
                         if (server == null) {
-                            server = extractServerFromDto(serverDto);
+                            server = extractServerFromDto(serverDto, customer);
                             serverMap.put(server.getUrl(), server);
                         }
                         resource.addServer(server);
@@ -161,32 +167,34 @@ public class JtaServiceImpl implements JtaService {
             });
 
         }
-        return entry;
+        return jtaEntry;
     }
 
     private Optional<InternalThreadDto> convertStringToInternalThreadDto(String activeThreadString) {
         Pattern pattern = Pattern.compile("^Thread\\[(.*)\\]");
-        Matcher matcher = pattern.matcher(activeThreadString);
         Optional<InternalThreadDto> option = Optional.empty();
-        while (matcher.find()) {
-            String thread = matcher.group(1);
+        if(activeThreadString != null) {
+            Matcher matcher = pattern.matcher(activeThreadString);
+            while (matcher.find()) {
+                String thread = matcher.group(1);
 
-            String[] elements = thread.split(",");
-            String name = elements[0];
-            String poolNumber = elements[1];
-            String type = elements[2];
-            InternalThreadDto internalThreadDto = new InternalThreadDto();
-            internalThreadDto.setWlsStatus(Util.extractWlsStatus(thread));
-            internalThreadDto.setName(name);
-            internalThreadDto.setPoolNumber(Integer.parseInt(poolNumber));
-            internalThreadDto.setType(type);
-            option = Optional.of(internalThreadDto);
+                String[] elements = thread.split(",");
+                String name = elements[0];
+                String poolNumber = elements[1];
+                String type = elements[2];
+                InternalThreadDto internalThreadDto = new InternalThreadDto();
+                internalThreadDto.setWlsStatus(Util.extractWlsStatus(thread));
+                internalThreadDto.setName(name);
+                internalThreadDto.setPoolNumber(Integer.parseInt(poolNumber));
+                internalThreadDto.setType(type);
+                option = Optional.of(internalThreadDto);
+            }
         }
         return option;
     }
 
-    private Server extractServerFromDto(ServerDto serverDTO) {
-        String[] splittedUrl = serverDTO.getUrl().split("\\+");
+    private Server extractServerFromDto(ServerDto serverDto, Customer customer) {
+        String[] splittedUrl = serverDto.getUrl().split("\\+");
         assert splittedUrl.length == 4;
         String serverName = splittedUrl[0];
         String url = splittedUrl[1];
@@ -195,8 +203,15 @@ public class JtaServiceImpl implements JtaService {
         Optional<Server> optionalServer = serverRepository.findByUrl(url);
         if (!optionalServer.isPresent()) {
             Server toCreate = new Server();
+            toCreate.setCustomer(customer);
             toCreate.setServerName(serverName);
-            toCreate.setUrl(url);
+            toCreate.setUrl(serverDto.getUrl());
+            toCreate.setLabel(serverDto.getServerLabel());
+            String[] completeAddress = url.split(":");
+            String address = completeAddress[0];
+            String port = completeAddress[1];
+            toCreate.setListenAddress(address);
+            toCreate.setServerPort(Long.parseLong(port));
             toCreate.setDomain(domain);
             toCreate.setConnection(connection);
             return serverRepository.save(toCreate);
