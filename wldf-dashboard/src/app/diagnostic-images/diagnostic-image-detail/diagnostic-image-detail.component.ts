@@ -31,9 +31,9 @@ export class DiagnosticImageDetailComponent implements OnInit, AfterViewInit {
     this.txChart = new Chart(txChartCtx, {
       type: 'doughnut',
       data: {
-        labels: ["Transaction Thread Count", "Idle Threads", "Standby Threads"],
+        labels: ["Transaction Thread", "Idle Threads", "Standby Threads"],
         datasets: [{
-          data: [this.diagnosticImage.totalThreadCount, this.diagnosticImage.idleThreadCount, this.diagnosticImage.standbyThreadCount],
+          data: [(this.diagnosticImage.totalThreadCount-this.diagnosticImage.idleThreadCount-this.diagnosticImage.standbyThreadCount), this.diagnosticImage.idleThreadCount, this.diagnosticImage.standbyThreadCount],
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
