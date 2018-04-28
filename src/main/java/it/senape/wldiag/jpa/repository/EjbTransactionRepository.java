@@ -27,7 +27,7 @@ public interface EjbTransactionRepository extends PagingAndSortingRepository<Ejb
     @Query(value = "select class_name fqnClassName, " +
             "count(*) hits " +
             "from ejb_transaction " +
-            "group by method " +
+            "group by class_name " +
             "order by hits desc " +
             "limit 5",
             nativeQuery = true)
